@@ -2,8 +2,9 @@ import React from "react";
 import StudentForm from "./StudentForm";
 import { Table, Space, Button, Modal } from "antd";
 import studentService from "../../services/studentService";
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Input } from 'antd';
 const { confirm } = Modal;
+const { Search } = Input;
 
 export default class StudentManagement extends React.Component {
   constructor(props) {
@@ -94,17 +95,29 @@ export default class StudentManagement extends React.Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="row">
+
+        <div className="col-md-6">
+          <Search placeholder="input search loading default" />
+        </div>
+
+        <div className="col-md-6">
           <Button
-            style={{ float: "right", marginBottom: "10px", zIndex:'1' }}
-            type="primary"
-            className="success-btn"
-            onClick={this.showModal}
+              style={{ float: "right", marginBottom: "10px", zIndex:'1' }}
+              type="primary"
+              className="success-btn"
+              onClick={this.showModal}
           >
             Add New
           </Button>
         </div>
+
+        <div>
+
+
+        </div>
+
+
         <Table columns={this.columns} dataSource={this.state.data} />
         <Modal
           destroyOnClose={true}
