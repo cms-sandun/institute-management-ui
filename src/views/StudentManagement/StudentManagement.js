@@ -1,6 +1,9 @@
 import React from "react";
 import StudentForm from "./StudentForm";
 import { Table, Space, Button, Modal } from "antd";
+import studentService from "../../services/studentService";
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const { confirm } = Modal;
 
 export default class StudentManagement extends React.Component {
   constructor(props) {
@@ -8,27 +11,30 @@ export default class StudentManagement extends React.Component {
 
     this.state = {
       visible: false,
+      data:[],
+      student:null
     };
 
     this.showModal = this.showModal.bind(this);
-    this.handleOk = this.handleOk.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.deleteStudent = this.deleteStudent.bind(this);
+    this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
   }
 
   columns = [
     {
       title: "First Name",
-      dataIndex: "firstName",
+      dataIndex: "first_name",
       key: "firstName",
     },
     {
       title: "Last Name",
-      dataIndex: "lastName",
+      dataIndex: "last_name",
       key: "lastName",
     },
     {
       title: "Contact No",
-      dataIndex: "contact",
+      dataIndex: "contact_no",
       key: "contact",
     },
     {
@@ -41,59 +47,48 @@ export default class StudentManagement extends React.Component {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Update</a>
-          <a>Delete</a>
+          <Button type='primary' onClick={(e)=>{this.showModal(record)}}>Update</Button>
+          <Button type='danger' onClick={(e)=>{this.showDeleteConfirmation(record.id)}}>Delete</Button>
         </Space>
       ),
     },
   ];
 
-  data = [
-    {
-      key: "1",
-      firstName: "Kasun",
-      lastName: "Perera",
-      contact: "0332225256",
-      batch: "BIT-COL-2020",
-    },
-    {
-      key: "2",
-      firstName: "Charuka",
-      lastName: "Maduranga",
-      contact: "0770249809",
-      batch: "BIT-COL-2020",
-    },
-    {
-      key: "3",
-      firstName: "Sandamali",
-      lastName: "Niroshini",
-      contact: "0770457656",
-      batch: "BIT-COL-2020",
-    },
-    {
-      key: "4",
-      firstName: "Lahiru",
-      lastName: "Mihiranga",
-      contact: "0332220830",
-      batch: "BIT-COL-2020",
-    },
-  ];
+  loadTable(){
+    studentService.getAllStudents().then(response=>{
+      this.setState({
+        data:response.data.data
+      })
+    })
+  }
 
-  showModal() {
+
+  componentDidMount(){
+     this.loadTable()
+  }
+
+  deleteStudent(studentId){
+    studentService.deleteStudent(studentId).then(response=>{
+      if(response.data.success){
+        this.loadTable()
+      }
+    })
+  }
+
+  showDeleteConfirmation(studentId){
+    this.deleteStudent(studentId);
+  }
+  
+  showModal(record) {
     this.setState({
-      visible: true,
+      student:record,
+      visible: true
     });
   }
 
-  handleOk = (e) => {
-    this.setState({
-      visible: false,
-    });
-  };
-
   handleCancel = (e) => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -110,21 +105,15 @@ export default class StudentManagement extends React.Component {
             Add New
           </Button>
         </div>
-        <Table columns={this.columns} dataSource={this.data} />
+        <Table columns={this.columns} dataSource={this.state.data} />
         <Modal
+          destroyOnClose={true}
           visible={this.state.visible}
-          onCancel={this.handleCancel}
+          onCancel={(e)=>{this.handleCancel(e)}}
           title="Student Form"
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              Cancel
-            </Button>,
-            <Button key="submit" type="primary" onClick={this.handleOk}>
-              Submit
-            </Button>,
-          ]}
+          footer={[]}
         >
-          <StudentForm />
+          <StudentForm student={this.state.student}  />
         </Modal>
       </div>
     );
