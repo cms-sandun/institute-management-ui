@@ -1,22 +1,10 @@
 import React from "react";
-import { Form, Input, Upload, Select, Button, notification } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import {Form, Input, Upload, Select, Button, notification} from "antd";
+import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
-const { Option } = Select;
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-
-const buttonItemLayout = {
-  wrapperCol: { span: 16, offset: 10 },
-};
+const {Option} = Select;
 
 export default class StudentForm extends React.Component {
   constructor(props) {
@@ -45,6 +33,7 @@ export default class StudentForm extends React.Component {
     this.resetErrorLabels = this.resetErrorLabels.bind(this);
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
+    this.onGenderChangeHandler = this.onGenderChangeHandler.bind(this);
   }
 
   resetErrorLabels() {
@@ -82,6 +71,12 @@ export default class StudentForm extends React.Component {
   onInputFieldChangeHandler(event) {
     this.setState({
       [event.target.name]: event.target.value,
+    });
+  }
+
+  onGenderChangeHandler(value) {
+    this.setState({
+      gender: value,
     });
   }
 
@@ -142,7 +137,7 @@ export default class StudentForm extends React.Component {
     });
 
     if (response.data.success) {
-      this.openNotificationWithIcon("success", "Student", "Successfully saved");
+      this.openNotificationWithIcon("success", "Student", response.data.msg);
       this.resetErrorLabels();
       this.resetFields();
     }
@@ -150,123 +145,130 @@ export default class StudentForm extends React.Component {
 
   render() {
     return (
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-      >
-        <Form.Item label="Profile Image" name="profileImage">
-          <Upload.Dragger name="files" action="/upload.do">
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-          </Upload.Dragger>
-        </Form.Item>
+        <form>
+          <div className='row'>
+            <div className='col-md-4'>
+              <Form.Item label="Profile Image" name="profileImage">
+                <Upload.Dragger name="files" action="/upload.do">
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined/>
+                  </p>
+                  <p className="ant-upload-text">
+                    Click or drag file to this area to upload
+                  </p>
+                </Upload.Dragger>
+              </Form.Item>
+            </div>
+            <div className='col-md-4'>
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="firstName"
+                    value={this.state.firstName}
+                    placeholder='First Name'
+                />
+                <label className="error-label">
+                  {this.state.firstNameError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="First Name">
-          <Input
-            onChange={this.onInputFieldChangeHandler}
-            name="firstName"
-            value={this.state.firstName}
-          />
-          <label className="form-control error-label">
-            {this.state.firstNameError}
-          </label>
-        </Form.Item>
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="middleName"
+                    value={this.state.middleName}
+                    placeholder='Middle Name'
+                />
+                <label className="error-label">
+                  {this.state.middleNameError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="Middle Name">
-          <Input
-            onChange={this.onInputFieldChangeHandler}
-            name="middleName"
-            value={this.state.middleName}
-          />
-          <label className="form-control error-label">
-            {this.state.middleNameError}
-          </label>
-        </Form.Item>
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="lastName"
+                    value={this.state.lastName}
+                    placeholder='Last Name'
+                />
+                <label className="error-label">
+                  {this.state.lastNameError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="Last Name">
-          <Input
-            onChange={this.onInputFieldChangeHandler}
-            name="lastName"
-            value={this.state.lastName}
-          />
-          <label className="form-control error-label">
-            {this.state.lastNameError}
-          </label>
-        </Form.Item>
+              <Form.Item>
+                <TextArea
+                    onChange={this.onInputFieldChangeHandler}
+                    name="address"
+                    value={this.state.address}
+                    placeholder='Address'
+                />
+                <label className="error-label">
+                  {this.state.addressError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="Address">
-          <TextArea
-            onChange={this.onInputFieldChangeHandler}
-            name="address"
-            value={this.state.address}
-          />
-          <label className="form-control error-label">
-            {this.state.addressError}
-          </label>
-        </Form.Item>
+              <Form.Item>
+                <Select
+                    defaultValue={this.state.gender}
+                    onChange={this.onGenderChangeHandler}
+                    name="gender"
+                >
+                  <Option value="male">Male</Option>
+                  <Option value="female">Female</Option>
+                </Select>
+              </Form.Item>
+            </div>
+            <div className='col-md-4'>
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="contactNo"
+                    value={this.state.contactNo}
+                    placeholder='Contact No'
+                />
+                <label className="error-label">
+                  {this.state.contactNoError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="Gender">
-          <Select
-            defaultValue={this.state.gender}
-            onChange={this.onInputFieldChangeHandler}
-            name="gender"
-          >
-            <Option value="male">Male</Option>
-            <Option value="female">Female</Option>
-          </Select>
-        </Form.Item>
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="email"
+                    value={this.state.email}
+                    placeholder='Email'
+                />
+                <label className="error-label">
+                  {this.state.emailError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="Contact No">
-          <Input
-            onChange={this.onInputFieldChangeHandler}
-            name="contactNo"
-            value={this.state.contactNo}
-          />
-          <label className="form-control error-label">
-            {this.state.contactNoError}
-          </label>
-        </Form.Item>
+              <Form.Item>
+                <input
+                    className="form-control ant-form-item-control-input"
+                    type="date"
+                    onChange={this.onInputFieldChangeHandler}
+                    name="dob"
+                    placeholder='DOB'
+                />
+                <label className="error-label">
+                  {this.state.dobError}
+                </label>
+              </Form.Item>
 
-        <Form.Item label="DOB">
-          <input
-            className="form-control ant-form-item-control-input"
-            type="date"
-            onChange={this.onInputFieldChangeHandler}
-            name="dob"
-          />
-          <label className="form-control error-label">
-            {this.state.dobError}
-          </label>
-        </Form.Item>
-
-        <Form.Item label="Email">
-          <Input
-            onChange={this.onInputFieldChangeHandler}
-            name="email"
-            value={this.state.email}
-          />
-          <label className="form-control error-label">
-            {this.state.emailError}
-          </label>
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: "right" }} {...buttonItemLayout}>
-          <Button
-            className="form-button submit-button"
-            type="primary"
-            onClick={this.onSubmitHandler}
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+              <Form.Item style={{textAlign: "right"}}>
+                <Button
+                    className="form-button submit-button"
+                    type="primary"
+                    onClick={this.onSubmitHandler}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </div>
+          </div>
+        </form>
     );
   }
 }

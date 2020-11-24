@@ -15,7 +15,8 @@ export default class StudentManagement extends React.Component {
         this.state = {
             visible: false,
             data: [],
-            student: null
+            student: null,
+            isSearchLoading:false
         };
 
         this.showModal = this.showModal.bind(this);
@@ -46,16 +47,16 @@ export default class StudentManagement extends React.Component {
             key: "contact",
         },
         {
-            title: "Batch",
-            dataIndex: "batch",
-            key: "batch",
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
         {
             title: "Action",
             key: "action",
             render: (text, record) => (
-                <Space size="middle">
-                    <Button type='primary' icon={<EditOutlined />} onClick={(e) => {
+                <div>
+                    <Button type='primary' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
                         this.showModal(record)
                     }}>
                     </Button>
@@ -66,7 +67,7 @@ export default class StudentManagement extends React.Component {
                     }}>
 
                     </Button>
-                </Space>
+                </div>
             ),
         },
     ];
@@ -111,6 +112,14 @@ export default class StudentManagement extends React.Component {
 
     handlerSearch = (e) => {
       if(e.key == "Enter"){
+          this.setState({isSearchLoading:true})
+          let searchText = e.target.value;
+          studentService.searchStudents(searchText).then(response => {
+              this.setState({
+                  data: response.data.data,
+                  isSearchLoading:false
+              })
+          })
       }
     }
 
@@ -120,7 +129,7 @@ export default class StudentManagement extends React.Component {
 
                 <div className="row">
                     <div className="col-md-6">
-                        <Search onKeyUp={this.handlerSearch} placeholder="Search By Name"/>
+                        <Search onKeyUp={this.handlerSearch} placeholder="Search By Name" loading={this.state.isSearchLoading}/>
                     </div>
 
                     <div className="col-md-6">
@@ -146,6 +155,7 @@ export default class StudentManagement extends React.Component {
                             }}
                             title="Student Form"
                             footer={[]}
+                            width={900}
                         >
                             <StudentForm student={this.state.student}/>
                         </Modal>

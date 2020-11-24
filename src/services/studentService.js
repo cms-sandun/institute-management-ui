@@ -11,6 +11,10 @@ class StudentService {
     return await axios.get(`${API.students}`)
   }
 
+  async searchStudents(searchText) {
+    return await axios.get(`${API.students}/search?name=${searchText}`)
+  }
+
   async deleteStudent(studentId) {
     return await axios.delete(`${API.students}/`+studentId)
   }
