@@ -1,9 +1,8 @@
 import React from "react";
 import StudentForm from "./StudentForm";
-import {Table, Space, Button, Modal} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
 import studentService from "../../services/studentService";
-import {Input} from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -16,13 +15,15 @@ export default class StudentManagement extends React.Component {
             visible: false,
             data: [],
             student: null,
-            isSearchLoading:false
+            isSearchLoading:false,
+            isNewRecord:true
         };
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.deleteStudent = this.deleteStudent.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
+        this.loadTable = this.loadTable.bind(this);
     }
 
     columns = [
@@ -57,7 +58,7 @@ export default class StudentManagement extends React.Component {
             render: (text, record) => (
                 <div>
                     <Button type='primary' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
-                        this.showModal(record)
+                        this.showModal(false, record)
                     }}>
                     </Button>
 
@@ -86,21 +87,31 @@ export default class StudentManagement extends React.Component {
     }
 
     deleteStudent(studentId) {
-        studentService.deleteStudent(studentId).then(response => {
-            if (response.data.success) {
-                this.loadTable()
+        Modal.confirm({
+            title: 'Delete',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Do you want to delete?',
+            okText: 'Yes',
+            cancelText: 'No',
+            onOk: () => {
+                studentService.deleteStudent(studentId).then(response => {
+                    if (response.data.success) {
+                        this.loadTable()
+                    }
+                })
             }
-        })
+        });
     }
 
     showDeleteConfirmation(studentId) {
         this.deleteStudent(studentId);
     }
 
-    showModal(record) {
+    showModal(isNewRecord, record) {
         this.setState({
             student: record,
-            visible: true
+            visible: true,
+            isNewRecord : isNewRecord
         });
     }
 
@@ -137,7 +148,9 @@ export default class StudentManagement extends React.Component {
                             style={{float: "right", marginBottom: "10px", zIndex: '1'}}
                             type="primary"
                             className="success-btn"
-                            onClick={this.showModal}
+                            onClick={()=>{
+                                this.showModal(true, null)
+                            }}
                         >
                             Add New
                         </Button>
@@ -157,7 +170,7 @@ export default class StudentManagement extends React.Component {
                             footer={[]}
                             width={900}
                         >
-                            <StudentForm student={this.state.student}/>
+                            <StudentForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>

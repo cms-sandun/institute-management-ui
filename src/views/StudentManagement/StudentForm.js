@@ -10,21 +10,22 @@ export default class StudentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: props.student.first_name,
-      lastName: props.student.last_name,
-      middleName: props.student.middle_name,
-      address: props.student.address,
-      gender: props.student.gender != undefined ? props.student.gender : 'male',
-      contactNo: props.student.contact_no,
-      dob: props.student.dob,
-      email: props.student.email,
+      studentID: props.student ? props.student.id : '',
+      firstName: props.student ? props.student.first_name : '',
+      lastName: props.student ? props.student.last_name : '',
+      middleName: props.student ? props.student.middle_name : '',
+      address: props.student ? props.student.address : '',
+      gender: props.student ? props.student.gender : 'male',
+      contactNo: props.student ? props.student.contact_no : '',
+      dob: props.student ? props.student.dob : '',
+      email: props.student ? props.student.email : '',
       firstNameError: "",
       middleNameError: "",
       lastNameError: "",
       addressError: "",
       contactNoError: "",
       dobError: "",
-      emailError: "",
+      emailError: ""
     };
 
     //console.log(this.props.student)
@@ -124,7 +125,7 @@ export default class StudentForm extends React.Component {
       this.setValidationError("emailError", "Email cannot be empty");
     }
 
-    const response = await studentService.saveStudent({
+    const payload = {
       branchId: 2,
       firstName: this.state.firstName,
       middleName: this.state.middleName,
@@ -134,13 +135,24 @@ export default class StudentForm extends React.Component {
       contactNo: this.state.contactNo,
       dob: this.state.dob,
       email: this.state.email,
-    });
+    }
+
+    let response = null
+    if (this.props.isNewRecord) {
+      response = await studentService.saveStudent(payload);
+    }else{
+      response = await studentService.updateStudent(this.state.studentID, payload);
+    }
 
     if (response.data.success) {
       this.openNotificationWithIcon("success", "Student", response.data.msg);
       this.resetErrorLabels();
       this.resetFields();
+      this.props.loadTable();
+    }else{
+      this.openNotificationWithIcon("error", "Student", response.data.msg);
     }
+
   }
 
   render() {

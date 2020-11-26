@@ -7,6 +7,10 @@ class StudentService {
     return await axios.post(`${API.students}`, student)
   }
 
+  async updateStudent(id, student) {
+    return await axios.put(`${API.students}/${id}`, student)
+  }
+
   async getAllStudents() {
     return await axios.get(`${API.students}`)
   }
