@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import StudentManagement from "../StudentManagement/StudentManagement";
 import BatchManagement from "../BatchManagement/BatchManagement";
+import CourseManagement from "../CourseManagement/CourseManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -43,7 +44,7 @@ export default class Dashboard extends React.Component {
               <Link to="/students">Students</Link>
             </Menu.Item>
             <Menu.Item key="4" icon={<DesktopOutlined />}>
-            <Link to='/'>Courses</Link>
+            <Link to='/courses'>Courses</Link>
             </Menu.Item>
             <Menu.Item key="5" icon={<DesktopOutlined />}>
               <Link to="/batches">Batches</Link>
@@ -93,6 +94,7 @@ export default class Dashboard extends React.Component {
               <Route path="/" exact render={()=><h1>This is Home</h1>} />
               <Route path="/students" exact component={StudentManagement} />
               <Route path="/batches" exact component={BatchManagement} />
+              <Route path="/courses" exact component={CourseManagement} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}></Footer>

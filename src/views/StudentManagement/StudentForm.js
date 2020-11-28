@@ -45,7 +45,7 @@ export default class StudentForm extends React.Component {
       addressError: "",
       contactNoError: "",
       dobError: "",
-      emailError: "",
+      emailError: ""
     });
   }
 
@@ -83,47 +83,57 @@ export default class StudentForm extends React.Component {
 
   setValidationError(errorField, errorMsg) {
     this.setState({
-      [errorField]: errorMsg,
+      [errorField]: errorMsg
     });
   }
 
   async onSubmitHandler(event) {
     this.resetErrorLabels();
+    let haveErrors = false;
 
     // Validate first name
     if (!this.state.firstName) {
       this.setValidationError("firstNameError", "First name cannot be empty");
+      haveErrors = true
     }
 
     // Validate middle name
     if (!this.state.middleName) {
       this.setValidationError("middleNameError", "Middle name cannot be empty");
+      haveErrors = true
     }
 
     // Validate last name
     if (!this.state.lastName) {
       this.setValidationError("lastNameError", "Last name cannot be empty");
+      haveErrors = true
     }
 
     // Validate address
     if (!this.state.address) {
       this.setValidationError("addressError", "Address cannot be empty");
+      haveErrors = true
     }
 
     // Validate contact no
     if (!this.state.contactNo) {
       this.setValidationError("contactNoError", "Contact No cannot be empty");
+      haveErrors = true
     }
 
     // Validate DOB
     if (!this.state.dob) {
       this.setValidationError("dobError", "DOB cannot be empty");
+      haveErrors = true
     }
 
     // Validate email
     if (!this.state.email) {
       this.setValidationError("emailError", "Email cannot be empty");
+      haveErrors = true
     }
+
+    if(haveErrors) return
 
     const payload = {
       branchId: 2,
