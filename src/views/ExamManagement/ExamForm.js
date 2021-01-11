@@ -6,7 +6,7 @@ import batchService from "../../services/batchService";
 
 const {Option} = Select;
 
-export default class BatchForm extends React.Component {
+export default class ExamForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

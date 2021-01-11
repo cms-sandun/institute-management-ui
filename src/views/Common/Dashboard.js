@@ -10,6 +10,7 @@ import {
 import StudentManagement from "../StudentManagement/StudentManagement";
 import BatchManagement from "../BatchManagement/BatchManagement";
 import CourseManagement from "../CourseManagement/CourseManagement";
+import ExamManagement from "../ExamManagement/ExamManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -56,7 +57,7 @@ export default class Dashboard extends React.Component {
             <Link to='/'>Classes</Link>
             </Menu.Item>
             <Menu.Item key="8" icon={<DesktopOutlined />}>
-            <Link to='/'>Exams</Link>
+              <Link to="/exams">Exams</Link>
             </Menu.Item>
             <Menu.Item key="9" icon={<DesktopOutlined />}>
             <Link to='/'>Time Table</Link>
@@ -95,6 +96,7 @@ export default class Dashboard extends React.Component {
               <Route path="/students" exact component={StudentManagement} />
               <Route path="/batches" exact component={BatchManagement} />
               <Route path="/courses" exact component={CourseManagement} />
+              <Route path="/exams" exact component={ExamManagement} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}></Footer>
