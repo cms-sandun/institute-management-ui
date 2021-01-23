@@ -3,10 +3,13 @@ import {Form, Input, Upload, Select, Button, notification, DatePicker} from "ant
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
+import {Calendar, momentLocalizer} from "react-big-calendar";
+import moment from "moment";
 
 const {Option} = Select;
+const localizer = momentLocalizer(moment);
 
-export default class StudentForm extends React.Component {
+export default class EventsCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -165,132 +168,112 @@ export default class StudentForm extends React.Component {
 
   }
 
+  myEventsList = [
+    {
+      'title': 'BIT colombo - SAD',
+      'allDay': true,
+      'start': new Date(2021, 0, 22),
+      'end': new Date(2021, 0, 22)
+    },
+    {
+      'title': 'FIT - Maths',
+      'allDay': true,
+      'start': new Date(2021, 0, 23),
+      'end': new Date(2021, 0, 23)
+    },
+    {
+      'title': 'IS - Revision',
+      'allDay': true,
+      'start': new Date(2021, 0, 24),
+      'end': new Date(2021, 0, 24)
+    },
+    {
+      'title': 'DTS ENDS',
+      'start': new Date(2021, 10, 6, 0, 0, 0),
+      'end': new Date(2021, 10, 13, 0, 0, 0)
+    },
+
+    {
+      'title': 'Some Event',
+      'start': new Date(2021, 3, 9, 0, 0, 0),
+      'end': new Date(2021, 3, 9, 0, 0, 0)
+    },
+    {
+      'title': 'Conference',
+      'start': new Date(2021, 3, 11),
+      'end': new Date(2021, 3, 13),
+      desc: 'Big conference for important people'
+    },
+    {
+      'title': 'Meeting',
+      'start': new Date(2021, 3, 12, 10, 30, 0, 0),
+      'end': new Date(2021, 3, 12, 12, 30, 0, 0),
+      desc: 'Pre-meeting meeting, to prepare for the meeting'
+    },
+    {
+      'title': 'Lunch',
+      'start': new Date(2021, 3, 12, 12, 0, 0, 0),
+      'end': new Date(2021, 3, 12, 13, 0, 0, 0),
+      desc: 'Power lunch'
+    },
+    {
+      'title': 'Meeting',
+      'start': new Date(2021, 3, 12, 14, 0, 0, 0),
+      'end': new Date(2021, 3, 12, 15, 0, 0, 0)
+    },
+    {
+      'title': 'Happy Hour',
+      'start': new Date(2021, 3, 12, 17, 0, 0, 0),
+      'end': new Date(2021, 3, 12, 17, 30, 0, 0),
+      desc: 'Most important meal of the day'
+    },
+    {
+      'title': 'Dinner',
+      'start': new Date(2021, 3, 12, 20, 0, 0, 0),
+      'end': new Date(2021, 3, 12, 21, 0, 0, 0)
+    },
+    {
+      'title': 'Birthday Party',
+      'start': new Date(2021, 3, 13, 7, 0, 0),
+      'end': new Date(2021, 3, 13, 10, 30, 0)
+    },
+    {
+      'title': 'Birthday Party 2',
+      'start': new Date(2021, 3, 13, 7, 0, 0),
+      'end': new Date(2021, 3, 13, 10, 30, 0)
+    },
+    {
+      'title': 'Birthday Party 3',
+      'start': new Date(2021, 3, 13, 7, 0, 0),
+      'end': new Date(2021, 3, 13, 10, 30, 0)
+    },
+    {
+      'title': 'Late Night Event',
+      'start': new Date(2021, 3, 17, 19, 30, 0),
+      'end': new Date(2021, 3, 18, 2, 0, 0)
+    },
+    {
+      'title': 'Multi-day Event',
+      'start': new Date(2021, 3, 20, 19, 30, 0),
+      'end': new Date(2021, 3, 22, 2, 0, 0)
+    }
+  ]
+
   render() {
     return (
-        <form>
-          <div className='row'>
-            <div className='col-md-4'>
-              <Form.Item label="Profile Image" name="profileImage">
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined/>
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                </Upload.Dragger>
-              </Form.Item>
-            </div>
-            <div className='col-md-4'>
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="firstName"
-                    value={this.state.firstName}
-                    placeholder='First Name'
-                />
-                <label className="error-label">
-                  {this.state.firstNameError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="middleName"
-                    value={this.state.middleName}
-                    placeholder='Middle Name'
-                />
-                <label className="error-label">
-                  {this.state.middleNameError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="lastName"
-                    value={this.state.lastName}
-                    placeholder='Last Name'
-                />
-                <label className="error-label">
-                  {this.state.lastNameError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <TextArea
-                    onChange={this.onInputFieldChangeHandler}
-                    name="address"
-                    value={this.state.address}
-                    placeholder='Address'
-                />
-                <label className="error-label">
-                  {this.state.addressError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Select
-                    defaultValue={this.state.gender}
-                    onChange={this.onGenderChangeHandler}
-                    name="gender"
-                >
-                  <Option value="male">Male</Option>
-                  <Option value="female">Female</Option>
-                </Select>
-              </Form.Item>
-            </div>
-            <div className='col-md-4'>
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="contactNo"
-                    value={this.state.contactNo}
-                    placeholder='Contact No'
-                />
-                <label className="error-label">
-                  {this.state.contactNoError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="email"
-                    value={this.state.email}
-                    placeholder='Email'
-                />
-                <label className="error-label">
-                  {this.state.emailError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <input
-                    className="form-control ant-form-item-control-input"
-                    type="date"
-                    onChange={this.onInputFieldChangeHandler}
-                    name="dob"
-                    placeholder='DOB'
-                />
-                <label className="error-label">
-                  {this.state.dobError}
-                </label>
-              </Form.Item>
-
-              <Form.Item style={{textAlign: "right"}}>
-                <Button
-                    className="form-button submit-button"
-                    type="primary"
-                    onClick={this.onSubmitHandler}
-                >
-                  Submit
-                </Button>
-              </Form.Item>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col">
+              <Calendar
+                  localizer={localizer}
+                  events={this.myEventsList}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 500 }}
+              />
             </div>
           </div>
-        </form>
+        </div>
     );
   }
 }

@@ -11,6 +11,8 @@ import StudentManagement from "../StudentManagement/StudentManagement";
 import BatchManagement from "../BatchManagement/BatchManagement";
 import CourseManagement from "../CourseManagement/CourseManagement";
 import ExamManagement from "../ExamManagement/ExamManagement";
+import AttendanceManagement from "../AttendanceManagement/AttendanceManagement";
+import EventsCalendar from "../EventsCalendar/EventsCalendar";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -66,7 +68,7 @@ export default class Dashboard extends React.Component {
             <Link to='/'>Payments</Link>
             </Menu.Item>
             <Menu.Item key="11" icon={<DesktopOutlined />}>
-            <Link to='/'>Attendance</Link>
+            <Link to='/attendance'>Attendance</Link>
             </Menu.Item>
             <SubMenu key="12" icon={<UserOutlined />} title="Reports">
               <Menu.Item key="13"> <Link to='/'>Students</Link></Menu.Item>
@@ -76,6 +78,12 @@ export default class Dashboard extends React.Component {
         </Sider>
         <Layout className="site-layout">
           <Header className="site-layout-background">
+
+            <div style={{ float: "left" }}>
+              <img width={50} src={window.location.origin+"/logo.jpg"} />
+              <label className='ml-4 mb-0'>Sip Zone Education Institute</label>
+            </div>
+
             <div style={{ float: "right" }}>
               <Badge dot>
                 <NotificationOutlined />
@@ -97,6 +105,8 @@ export default class Dashboard extends React.Component {
               <Route path="/batches" exact component={BatchManagement} />
               <Route path="/courses" exact component={CourseManagement} />
               <Route path="/exams" exact component={ExamManagement} />
+              <Route path="/attendance" exact component={AttendanceManagement} />
+              <Route path="/calendar" exact component={EventsCalendar} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}></Footer>

@@ -3,10 +3,13 @@ import {Form, Input, Upload, Select, Button, notification, DatePicker} from "ant
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
+import QrReader from 'react-qr-reader'
+import { Card } from 'antd';
+const { Meta } = Card;
 
 const {Option} = Select;
 
-export default class StudentForm extends React.Component {
+export default class MarkAttendanceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +28,8 @@ export default class StudentForm extends React.Component {
       addressError: "",
       contactNoError: "",
       dobError: "",
-      emailError: ""
+      emailError: "",
+      result: 'No result'
     };
 
     //console.log(this.props.student)
@@ -35,6 +39,18 @@ export default class StudentForm extends React.Component {
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
     this.onGenderChangeHandler = this.onGenderChangeHandler.bind(this);
+  }
+
+  handleScan = data => {
+    if (data) {
+      this.setState({
+        result: data
+      })
+    }
+  }
+
+  handleError = err => {
+    console.error(err)
   }
 
   resetErrorLabels() {
@@ -169,125 +185,65 @@ export default class StudentForm extends React.Component {
     return (
         <form>
           <div className='row'>
-            <div className='col-md-4'>
-              <Form.Item label="Profile Image" name="profileImage">
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined/>
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                </Upload.Dragger>
+            <div className='col-md-6'>
+              <Form.Item label="Scan QR" name="profileImage">
+                <QrReader
+                    delay={300}
+                    onError={this.handleError}
+                    onScan={this.handleScan}
+                    style={{ width: '400px' }}
+                />
               </Form.Item>
             </div>
-            <div className='col-md-4'>
+            <div className='col-md-6'>
+
               <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="firstName"
-                    value={this.state.firstName}
-                    placeholder='First Name'
-                />
-                <label className="error-label">
-                  {this.state.firstNameError}
-                </label>
+                <div className='row'>
+                  <div className='col-md-3'>
+                    <label>Select Date</label>
+                  </div>
+
+                  <div className='col-md-9'>
+                    <DatePicker style={{width:'100%'}}/>
+                  </div>
+                </div>
               </Form.Item>
 
               <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="middleName"
-                    value={this.state.middleName}
-                    placeholder='Middle Name'
-                />
-                <label className="error-label">
-                  {this.state.middleNameError}
-                </label>
+                <div className='row'>
+                  <div className='col-md-3'>
+                    <label>Select Class</label>
+                  </div>
+
+                  <div className='col-md-9'>
+                    <Select style={{width:'100%'}}>
+                      <Option>System Analysis and Design</Option>
+                    </Select>
+                  </div>
+                </div>
               </Form.Item>
 
               <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="lastName"
-                    value={this.state.lastName}
-                    placeholder='Last Name'
-                />
-                <label className="error-label">
-                  {this.state.lastNameError}
-                </label>
+                <div className='row'>
+                  <div className='col-md-3'>
+                    <label>Student Profile</label>
+                  </div>
+
+                  <div className='col-md-9'>
+                    <Card
+                        hoverable
+                        style={{ width: 240 }}
+                        cover={<img alt="example" src={window.location.origin+"/placeholder.png"} />}
+                    >
+                      <Meta title={"Student Name : "+this.state.result} description="Student ID : 1655457" />
+                    </Card>
+                  </div>
+                </div>
               </Form.Item>
 
-              <Form.Item>
-                <TextArea
-                    onChange={this.onInputFieldChangeHandler}
-                    name="address"
-                    value={this.state.address}
-                    placeholder='Address'
-                />
-                <label className="error-label">
-                  {this.state.addressError}
-                </label>
-              </Form.Item>
 
-              <Form.Item>
-                <Select
-                    defaultValue={this.state.gender}
-                    onChange={this.onGenderChangeHandler}
-                    name="gender"
-                >
-                  <Option value="male">Male</Option>
-                  <Option value="female">Female</Option>
-                </Select>
-              </Form.Item>
-            </div>
-            <div className='col-md-4'>
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="contactNo"
-                    value={this.state.contactNo}
-                    placeholder='Contact No'
-                />
-                <label className="error-label">
-                  {this.state.contactNoError}
-                </label>
-              </Form.Item>
 
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="email"
-                    value={this.state.email}
-                    placeholder='Email'
-                />
-                <label className="error-label">
-                  {this.state.emailError}
-                </label>
-              </Form.Item>
 
-              <Form.Item>
-                <input
-                    className="form-control ant-form-item-control-input"
-                    type="date"
-                    onChange={this.onInputFieldChangeHandler}
-                    name="dob"
-                    placeholder='DOB'
-                />
-                <label className="error-label">
-                  {this.state.dobError}
-                </label>
-              </Form.Item>
-
-              <Form.Item style={{textAlign: "right"}}>
-                <Button
-                    className="form-button submit-button"
-                    type="primary"
-                    onClick={this.onSubmitHandler}
-                >
-                  Submit
-                </Button>
-              </Form.Item>
             </div>
           </div>
         </form>
