@@ -1,62 +1,52 @@
 import React from "react";
-import StudentForm from "./StudentForm";
+import UserForm from "./UserForm";
 import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
-import studentService from "../../services/studentService";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, WindowsOutlined } from '@ant-design/icons';
 
 const {confirm} = Modal;
 const {Search} = Input;
 
-export default class StudentManagement extends React.Component {
+export default class UserManagement extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             visible: false,
             data: [],
-            student: null,
+            user: null,
             isSearchLoading:false,
             isNewRecord:true
         };
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-        this.deleteStudent = this.deleteStudent.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
     }
 
     columns = [
         {
-            title: "First Name",
-            dataIndex: "first_name",
-            key: "firstName",
+            title: "User Name",
+            dataIndex: "username",
+            key: "username",
         },
         {
-            title: "Middle Name",
-            dataIndex: "middle_name",
-            key: "middleName",
+            title: "Role",
+            dataIndex: "role",
+            key: "role",
         },
         {
-            title: "Last Name",
-            dataIndex: "last_name",
-            key: "lastName",
-        },
-        {
-            title: "Contact No",
-            dataIndex: "contact_no",
-            key: "contact",
-        },
-        {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Created At",
+            dataIndex: "created_at",
+            key: "created_at",
         },
         {
             title: "Action",
             key: "action",
             render: (text, record) => (
                 <div>
+
                     <Button className='mr-2' icon={<EditOutlined />} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
@@ -74,10 +64,24 @@ export default class StudentManagement extends React.Component {
     ];
 
     loadTable() {
-        studentService.getAllStudents().then(response => {
-            this.setState({
-                data: response.data.data
-            })
+        this.setState({
+            data : [
+                {
+                    "username" : "Sandun",
+                    "role" : "Admin",
+                    "created_at" : "2021-01-23"
+                },
+                {
+                    "username" : "Sandamali",
+                    "role" : "User",
+                    "created_at" : "2021-01-24"
+                },
+                {
+                    "username" : "Saman",
+                    "role" : "Admin",
+                    "created_at" : "2021-01-25"
+                }
+            ]
         })
     }
 
@@ -86,7 +90,7 @@ export default class StudentManagement extends React.Component {
         this.loadTable()
     }
 
-    deleteStudent(studentId) {
+    deleteUser(userId) {
         Modal.confirm({
             title: 'Delete',
             icon: <ExclamationCircleOutlined />,
@@ -94,22 +98,18 @@ export default class StudentManagement extends React.Component {
             okText: 'Yes',
             cancelText: 'No',
             onOk: () => {
-                studentService.deleteStudent(studentId).then(response => {
-                    if (response.data.success) {
-                        this.loadTable()
-                    }
-                })
+
             }
         });
     }
 
-    showDeleteConfirmation(studentId) {
-        this.deleteStudent(studentId);
+    showDeleteConfirmation(userId) {
+        this.deleteUser(userId);
     }
 
     showModal(isNewRecord, record) {
         this.setState({
-            student: record,
+            user: record,
             visible: true,
             isNewRecord : isNewRecord
         });
@@ -125,25 +125,19 @@ export default class StudentManagement extends React.Component {
       if(e.key == "Enter"){
           this.setState({isSearchLoading:true})
           let searchText = e.target.value;
-          studentService.searchStudents(searchText).then(response => {
-              this.setState({
-                  data: response.data.data,
-                  isSearchLoading:false
-              })
-          })
+
       }
     }
 
     render() {
         return (
             <div className="container-fluid">
-
                 <div className="row">
                     <div className="col-md-6">
                         <Search onKeyUp={this.handlerSearch} placeholder="Search By Name" loading={this.state.isSearchLoading}/>
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-6 text-right">
                         <Button
                             style={{float: "right", marginBottom: "10px", zIndex: '1'}}
                             type="primary"
@@ -152,9 +146,23 @@ export default class StudentManagement extends React.Component {
                                 this.showModal(true, null)
                             }}
                         >
-                            Add New
+                            Manage Roles
+                        </Button>
+
+                        <Button
+                            style={{marginBottom: "10px", zIndex: '1'}}
+                            type="primary"
+                            className="success-btn"
+                            onClick={()=>{
+                                this.showModal(true, null)
+                            }}
+                        >
+                            Add New User
                         </Button>
                     </div>
+
+
+
                 </div>
 
                 <div className="row">
@@ -166,11 +174,11 @@ export default class StudentManagement extends React.Component {
                             onCancel={(e) => {
                                 this.handleCancel(e)
                             }}
-                            title="Student Form"
+                            title="User Form"
                             footer={[]}
                             width={900}
                         >
-                            <StudentForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <UserForm user={this.state.user} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>
