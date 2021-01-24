@@ -86,9 +86,6 @@ export default class Dashboard extends React.Component {
             <Menu.Item key="8" icon={<PaperClipOutlined />}>
               <Link to="/exams">Exams</Link>
             </Menu.Item>
-            <Menu.Item key="9" icon={<FieldTimeOutlined />}>
-            <Link to='/'>Time Table</Link>
-            </Menu.Item>
             <Menu.Item key="9" icon={<CalendarOutlined />}>
             <Link to='/calendar'>Calendar</Link>
             </Menu.Item>
@@ -108,11 +105,11 @@ export default class Dashboard extends React.Component {
           <Header className="site-layout-background">
 
             <div style={{ float: "left" }}>
-              <img width={50} src={window.location.origin+"/logo.jpg"} />
-              <label className='ml-4 mb-0'>Sip Zone Education Institute</label>
+              <img className='institute-logo' width={50} src={window.location.origin+"/logo.jpg"} />
+              <label className='ml-4 mb-0 institute-name-label'>Sip Zone Education Institute</label>
             </div>
 
-            <div style={{ float: "right" }}>
+            <div style={{ float: "right", cursor:'pointer'}}>
               <Badge dot onClick={this.showDrawer}>
                 <NotificationOutlined />
               </Badge>
