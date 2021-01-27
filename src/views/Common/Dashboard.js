@@ -25,6 +25,7 @@ import AttendanceManagement from "../AttendanceManagement/AttendanceManagement";
 import EventsCalendar from "../EventsCalendar/EventsCalendar";
 import Login from "./Login";
 import UserManagement from "../UserManagement/UserManagement";
+import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -66,7 +67,7 @@ export default class Dashboard extends React.Component {
               <Link to='/users'>Users</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<UsergroupAddOutlined />}>
-            <Link to='/'>Employees</Link>
+            <Link to='/employees'>Employees</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<UsergroupAddOutlined />}>
               <Link to="/students">Students</Link>
@@ -127,6 +128,7 @@ export default class Dashboard extends React.Component {
             >
               <Route path="/" exact render={()=><h1>This is Home</h1>} />
               <Route path="/students" exact component={StudentManagement} />
+              <Route path="/employees" exact component={EmployeeManagement} />
               <Route path="/batches" exact component={BatchManagement} />
               <Route path="/courses" exact component={CourseManagement} />
               <Route path="/exams" exact component={ExamManagement} />

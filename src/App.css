@@ -49,3 +49,9 @@
     margin-top: -12px;
 }
 
+.ant-table-small .ant-table-thead > tr > th{
+    background-color: #dedbdb;
+}
+
+
+
