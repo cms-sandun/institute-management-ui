@@ -19,6 +19,8 @@ export default class EmployeeForm extends React.Component {
       contactNo: props.student ? props.student.contact_no : '',
       dob: props.student ? props.student.dob : '',
       email: props.student ? props.student.email : '',
+      qualifications: props.student ? props.student.qualifications : '',
+      type: props.student ? props.student.type : 'academic',
       firstNameError: "",
       middleNameError: "",
       lastNameError: "",
@@ -169,6 +171,9 @@ export default class EmployeeForm extends React.Component {
     return (
         <form>
           <div className='row'>
+
+          </div>
+          <div className='row'>
             <div className='col-md-4'>
               <Form.Item label="Profile Image" name="profileImage">
                 <Upload.Dragger name="files" action="/upload.do">
@@ -219,6 +224,18 @@ export default class EmployeeForm extends React.Component {
               </Form.Item>
 
               <Form.Item>
+                <Input
+                    name="employeeNumber"
+                    value={this.state.employee_no}
+                    placeholder='Employee Number'
+                    disabled={true}
+                />
+                <label className="error-label">
+                  {this.state.lastNameError}
+                </label>
+              </Form.Item>
+
+              <Form.Item>
                 <TextArea
                     onChange={this.onInputFieldChangeHandler}
                     name="address"
@@ -240,8 +257,7 @@ export default class EmployeeForm extends React.Component {
                   <Option value="female">Female</Option>
                 </Select>
               </Form.Item>
-            </div>
-            <div className='col-md-4'>
+
               <Form.Item>
                 <Input
                     onChange={this.onInputFieldChangeHandler}
@@ -279,6 +295,31 @@ export default class EmployeeForm extends React.Component {
                 </label>
               </Form.Item>
 
+            </div>
+
+            <div className='col-md-4'>
+              <Form.Item>
+                <TextArea
+                    name="qualifications"s
+                    value={this.state.qualification}
+                    placeholder='Qualifications'
+                />
+                <label className="error-label">
+                  {this.state.dobError}
+                </label>
+              </Form.Item>
+
+              <Form.Item>
+                <Select
+                    defaultValue={this.state.type}
+                    onChange={this.onGenderChangeHandler}
+                    name="type"
+                >
+                  <Option value="academic">Academic</Option>
+                  <Option value="non-academic">Non Academic</Option>
+                </Select>
+              </Form.Item>
+
               <Form.Item style={{textAlign: "right"}}>
                 <Button
                     className="form-button submit-button"
@@ -289,6 +330,7 @@ export default class EmployeeForm extends React.Component {
                 </Button>
               </Form.Item>
             </div>
+
           </div>
         </form>
     );

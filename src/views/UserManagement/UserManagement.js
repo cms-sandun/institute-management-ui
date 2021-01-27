@@ -1,7 +1,8 @@
 import React from "react";
 import UserForm from "./UserForm";
 import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, WindowsOutlined } from '@ant-design/icons';
+import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined, WindowsOutlined} from '@ant-design/icons';
+import ManageRolesForm from "./ManageRolesForm";
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -12,10 +13,11 @@ export default class UserManagement extends React.Component {
 
         this.state = {
             visible: false,
+            visibleManageRoles: true,
             data: [],
             user: null,
-            isSearchLoading:false,
-            isNewRecord:true
+            isSearchLoading: false,
+            isNewRecord: true
         };
 
         this.showModal = this.showModal.bind(this);
@@ -47,13 +49,13 @@ export default class UserManagement extends React.Component {
             render: (text, record) => (
                 <div>
 
-                    <Button className='mr-2' icon={<EditOutlined />} onClick={(e) => {
+                    <Button className='mr-2' icon={<EditOutlined/>} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
                     </Button>
 
 
-                    <Button icon={<DeleteOutlined />} onClick={(e) => {
+                    <Button icon={<DeleteOutlined/>} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
 
@@ -65,21 +67,21 @@ export default class UserManagement extends React.Component {
 
     loadTable() {
         this.setState({
-            data : [
+            data: [
                 {
-                    "username" : "Sandun",
-                    "role" : "Admin",
-                    "created_at" : "2021-01-23"
+                    "username": "Sandun",
+                    "role": "Admin",
+                    "created_at": "2021-01-23"
                 },
                 {
-                    "username" : "Sandamali",
-                    "role" : "User",
-                    "created_at" : "2021-01-24"
+                    "username": "Sandamali",
+                    "role": "User",
+                    "created_at": "2021-01-24"
                 },
                 {
-                    "username" : "Saman",
-                    "role" : "Admin",
-                    "created_at" : "2021-01-25"
+                    "username": "Saman",
+                    "role": "Admin",
+                    "created_at": "2021-01-25"
                 }
             ]
         })
@@ -93,7 +95,7 @@ export default class UserManagement extends React.Component {
     deleteUser(userId) {
         Modal.confirm({
             title: 'Delete',
-            icon: <ExclamationCircleOutlined />,
+            icon: <ExclamationCircleOutlined/>,
             content: 'Do you want to delete?',
             okText: 'Yes',
             cancelText: 'No',
@@ -111,22 +113,31 @@ export default class UserManagement extends React.Component {
         this.setState({
             user: record,
             visible: true,
-            isNewRecord : isNewRecord
+            isNewRecord: isNewRecord
+        });
+    }
+
+    showManageRolesModal(isNewRecord, record) {
+        this.setState({
+            user: record,
+            visibleManageRoles: true,
+            isNewRecord: isNewRecord
         });
     }
 
     handleCancel = (e) => {
         this.setState({
-            visible: false
+            visible: false,
+            visibleManageRoles: false,
         });
     };
 
     handlerSearch = (e) => {
-      if(e.key == "Enter"){
-          this.setState({isSearchLoading:true})
-          let searchText = e.target.value;
+        if (e.key == "Enter") {
+            this.setState({isSearchLoading: true})
+            let searchText = e.target.value;
 
-      }
+        }
     }
 
     render() {
@@ -134,7 +145,8 @@ export default class UserManagement extends React.Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-6">
-                        <Search onKeyUp={this.handlerSearch} placeholder="Search By Name" loading={this.state.isSearchLoading}/>
+                        <Search onKeyUp={this.handlerSearch} placeholder="Search By Name"
+                                loading={this.state.isSearchLoading}/>
                     </div>
 
                     <div className="col-md-6 text-right">
@@ -142,8 +154,8 @@ export default class UserManagement extends React.Component {
                             style={{float: "right", marginBottom: "10px", zIndex: '1'}}
                             type="primary"
                             className="success-btn"
-                            onClick={()=>{
-                                this.showModal(true, null)
+                            onClick={() => {
+                                this.showManageRolesModal(true, null)
                             }}
                         >
                             Manage Roles
@@ -153,14 +165,13 @@ export default class UserManagement extends React.Component {
                             style={{marginBottom: "10px", zIndex: '1'}}
                             type="primary"
                             className="success-btn"
-                            onClick={()=>{
+                            onClick={() => {
                                 this.showModal(true, null)
                             }}
                         >
                             Add New User
                         </Button>
                     </div>
-
 
 
                 </div>
@@ -178,8 +189,26 @@ export default class UserManagement extends React.Component {
                             footer={[]}
                             width={900}
                         >
-                            <UserForm user={this.state.user} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <UserForm user={this.state.user} loadTable={this.loadTable}
+                                      isNewRecord={this.state.isNewRecord}/>
                         </Modal>
+
+
+                        <Modal
+                            destroyOnClose={true}
+                            visible={this.state.visibleManageRoles}
+                            onCancel={(e) => {
+                                this.handleCancel(e)
+                            }}
+                            title="Manage Roles Form"
+                            footer={[]}
+                            width={900}
+                        >
+                            <ManageRolesForm user={this.state.user} loadTable={this.loadTable}
+                                             isNewRecord={this.state.isNewRecord}/>
+                        </Modal>
+
+
                     </div>
                 </div>
 
