@@ -13,7 +13,7 @@ export default class UserManagement extends React.Component {
 
         this.state = {
             visible: false,
-            visibleManageRoles: true,
+            visibleManageRoles: false,
             data: [],
             user: null,
             isSearchLoading: false,
@@ -187,7 +187,7 @@ export default class UserManagement extends React.Component {
                             }}
                             title="User Form"
                             footer={[]}
-                            width={900}
+                            width={400}
                         >
                             <UserForm user={this.state.user} loadTable={this.loadTable}
                                       isNewRecord={this.state.isNewRecord}/>

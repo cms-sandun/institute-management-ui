@@ -169,26 +169,17 @@ export default class UserForm extends React.Component {
     return (
         <form>
           <div className='row'>
-            <div className='col-md-4'>
-              <Form.Item label="Profile Image" name="profileImage">
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined/>
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                </Upload.Dragger>
-              </Form.Item>
-            </div>
-            <div className='col-md-4'>
+            <div className='col-md-12'>
               <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="firstName"
-                    value={this.state.firstName}
-                    placeholder='First Name'
-                />
+                <Select
+                    placeholder="Select Employee"
+                    name="employee"
+
+                >
+                  <Option value={1}>Sandun Perera</Option>
+                  <Option value={2}>Sandamali Niroshini</Option>
+                  <Option value={3}>Saman Perera</Option>
+                </Select>
                 <label className="error-label">
                   {this.state.firstNameError}
                 </label>
@@ -197,9 +188,9 @@ export default class UserForm extends React.Component {
               <Form.Item>
                 <Input
                     onChange={this.onInputFieldChangeHandler}
-                    name="middleName"
+                    name="userName"
                     value={this.state.middleName}
-                    placeholder='Middle Name'
+                    placeholder='User Name'
                 />
                 <label className="error-label">
                   {this.state.middleNameError}
@@ -211,7 +202,7 @@ export default class UserForm extends React.Component {
                     onChange={this.onInputFieldChangeHandler}
                     name="lastName"
                     value={this.state.lastName}
-                    placeholder='Last Name'
+                    placeholder='Password'
                 />
                 <label className="error-label">
                   {this.state.lastNameError}
@@ -219,64 +210,14 @@ export default class UserForm extends React.Component {
               </Form.Item>
 
               <Form.Item>
-                <TextArea
-                    onChange={this.onInputFieldChangeHandler}
-                    name="address"
-                    value={this.state.address}
-                    placeholder='Address'
-                />
-                <label className="error-label">
-                  {this.state.addressError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
                 <Select
-                    defaultValue={this.state.gender}
                     onChange={this.onGenderChangeHandler}
                     name="gender"
+                    placeholder="Select Role"
                 >
                   <Option value="male">Male</Option>
                   <Option value="female">Female</Option>
                 </Select>
-              </Form.Item>
-            </div>
-            <div className='col-md-4'>
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="contactNo"
-                    value={this.state.contactNo}
-                    placeholder='Contact No'
-                />
-                <label className="error-label">
-                  {this.state.contactNoError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="email"
-                    value={this.state.email}
-                    placeholder='Email'
-                />
-                <label className="error-label">
-                  {this.state.emailError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <input
-                    className="form-control ant-form-item-control-input"
-                    type="date"
-                    onChange={this.onInputFieldChangeHandler}
-                    name="dob"
-                    placeholder='DOB'
-                />
-                <label className="error-label">
-                  {this.state.dobError}
-                </label>
               </Form.Item>
 
               <Form.Item style={{textAlign: "right"}}>
@@ -288,6 +229,8 @@ export default class UserForm extends React.Component {
                   Submit
                 </Button>
               </Form.Item>
+
+
             </div>
           </div>
         </form>
