@@ -256,6 +256,26 @@ export default class EventsCalendar extends React.Component {
       'title': 'Multi-day Event',
       'start': new Date(2021, 3, 20, 19, 30, 0),
       'end': new Date(2021, 3, 22, 2, 0, 0)
+    },
+    {
+      'title': 'Exam - MS Office Application',
+      'start': new Date(2021, 1, 18, 19, 30, 0),
+      'end': new Date(2021, 1, 18, 2, 0, 0)
+    },
+    {
+      'title': 'Exam - ICDL',
+      'start': new Date(2021, 1, 20, 19, 30, 0),
+      'end': new Date(2021, 1, 20, 2, 0, 0)
+    },
+    {
+      'title': 'Exam - SAD',
+      'start': new Date(2021, 1, 25, 7, 30, 0),
+      'end': new Date(2021, 1, 25, 8, 30, 0)
+    },
+    {
+      'title': 'Exam - SAD',
+      'start': new Date(2021, 1, 25, 9, 30, 0),
+      'end': new Date(2021, 1, 25, 11, 30, 0)
     }
   ]
 

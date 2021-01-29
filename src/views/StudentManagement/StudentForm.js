@@ -3,6 +3,7 @@ import {Form, Input, Upload, Select, Button, notification, DatePicker} from "ant
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
+import moment from "moment";
 
 const {Option} = Select;
 
@@ -13,7 +14,6 @@ export default class StudentForm extends React.Component {
       studentID: props.student ? props.student.id : '',
       firstName: props.student ? props.student.first_name : '',
       lastName: props.student ? props.student.last_name : '',
-      middleName: props.student ? props.student.middle_name : '',
       address: props.student ? props.student.address : '',
       gender: props.student ? props.student.gender : 'male',
       contactNo: props.student ? props.student.contact_no : '',
@@ -35,6 +35,7 @@ export default class StudentForm extends React.Component {
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
     this.onGenderChangeHandler = this.onGenderChangeHandler.bind(this);
+    this.onDOBChangeHandler = this.onDOBChangeHandler.bind(this);
   }
 
   resetErrorLabels() {
@@ -81,6 +82,12 @@ export default class StudentForm extends React.Component {
     });
   }
 
+  onDOBChangeHandler(value) {
+    this.setState({
+      dob: value,
+    });
+  }
+
   setValidationError(errorField, errorMsg) {
     this.setState({
       [errorField]: errorMsg
@@ -94,12 +101,6 @@ export default class StudentForm extends React.Component {
     // Validate first name
     if (!this.state.firstName) {
       this.setValidationError("firstNameError", "First name cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate middle name
-    if (!this.state.middleName) {
-      this.setValidationError("middleNameError", "Middle name cannot be empty");
       haveErrors = true
     }
 
@@ -119,18 +120,40 @@ export default class StudentForm extends React.Component {
     if (!this.state.contactNo) {
       this.setValidationError("contactNoError", "Contact No cannot be empty");
       haveErrors = true
+    }else{
+      // Check if valid phone
+      const regex = /^(?:0|94|\+94)?(?:(11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|47|51|52|54|55|57|63|65|66|67|81|912)(0|2|3|4|5|7|9)|7(0|1|2|5|6|7|8)\d)\d{6}$/;
+      if(!regex.test(this.state.contactNo)){
+        this.setValidationError("contactNoError", "Invalid phone number");
+        haveErrors = true
+      }
     }
 
     // Validate DOB
     if (!this.state.dob) {
       this.setValidationError("dobError", "DOB cannot be empty");
       haveErrors = true
+    }else{
+      var a = moment();
+      var b = moment(this.state.dob, 'YYYY');
+      var age = a.diff(b, 'years');
+      if(age <= 6 || age >=60){
+        this.setValidationError("dobError", "Age should be between 6 and 60");
+        haveErrors = true
+      }
     }
 
     // Validate email
     if (!this.state.email) {
       this.setValidationError("emailError", "Email cannot be empty");
       haveErrors = true
+    }else{
+      // Check if valid email
+      const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if(!regex.test(this.state.email)){
+        this.setValidationError("emailError", "Invalid email");
+        haveErrors = true
+      }
     }
 
     if(haveErrors) return
@@ -201,9 +224,6 @@ export default class StudentForm extends React.Component {
                     value={this.state.middleName}
                     placeholder='Middle Name'
                 />
-                <label className="error-label">
-                  {this.state.middleNameError}
-                </label>
               </Form.Item>
 
               <Form.Item>
@@ -267,13 +287,14 @@ export default class StudentForm extends React.Component {
               </Form.Item>
 
               <Form.Item>
-                <input
+                {/*<input
                     className="form-control ant-form-item-control-input"
                     type="date"
                     onChange={this.onInputFieldChangeHandler}
                     name="dob"
                     placeholder='DOB'
-                />
+                />*/}
+                <DatePicker  placeholder='DOB' className='w-100' onChange={this.onDOBChangeHandler} />
                 <label className="error-label">
                   {this.state.dobError}
                 </label>
