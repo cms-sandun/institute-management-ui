@@ -30,8 +30,8 @@
 
     <div class="row">
         <div class="col">
-            <h1 class='mt-5 text-center'>Revenue - Summary</h1>
-            <h5 class='mt-1 text-center'>(2020 / August - 2021 / January)</h5>
+            <h1 class='mt-5 text-center'>Revenue - Summary (All branches)</h1>
+            <h5 class='mt-1 text-center'>(2020-January : 2020-December)</h5>
         </div>
     </div>
 
@@ -67,22 +67,22 @@
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['2020 / August', '2020 / September', '2020 / October', '2020 / November', '2020 / December', '2021 / January'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
             datasets: [
                 {
                     label: "Gampaha",
-                    backgroundColor: "blue",
-                    data: [100000,200000,300000,350000,470000,543456]
+                    backgroundColor: "#68d4cc",
+                    data: [100000,200000,300000,350000,470000,543456,500000,400000,300000,170876,67394,443345]
                 },
                 {
                     label: "Colombo",
-                    backgroundColor: "red",
-                    data: [500000,400000,300000,170876,67394,443345]
+                    backgroundColor: "#febc3a",
+                    data: [500000,400000,300000,170876,67394,443345,200000,300000,500000,263767,477534,356643]
                 },
                 {
                     label: "Galle",
-                    backgroundColor: "green",
-                    data: [200000,300000,500000,263767,477534,356643]
+                    backgroundColor: "#6e838e",
+                    data: [200000,300000,500000,263767,477534,356643,500000,400000,300000,170876,67394,443345]
                 }
             ]
         },
