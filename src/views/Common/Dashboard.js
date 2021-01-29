@@ -107,7 +107,7 @@ export default class Dashboard extends React.Component {
 
             <div style={{ float: "left" }}>
               <img className='institute-logo' width={50} src={window.location.origin+"/logo.jpg"} />
-              <label className='ml-4 mb-0 institute-name-label'>Sip Zone Education Institute</label>
+              <label className='ml-4 mb-0 institute-name-label'>SipZone Education Institute</label>
             </div>
 
             <div style={{ float: "right", cursor:'pointer'}}>
@@ -115,6 +115,7 @@ export default class Dashboard extends React.Component {
                 <NotificationOutlined />
               </Badge>
               <Avatar style={{ marginLeft: "20px" }} icon={<UserOutlined />} />
+              <label className='ml-2'>Sandamali Niroshini</label>
             </div>
           </Header>
           <Content style={{ margin: "0 16px" }}>
