@@ -31,7 +31,7 @@ export default class StudentManagement extends React.Component {
             title: "",
             render: (text, record) => (
                 <div>
-                    <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.png"}/>
+                    <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.jpeg"}/>
                 </div>
             ),
         },
