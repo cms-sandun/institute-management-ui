@@ -1,6 +1,6 @@
 import React from "react";
 import CourseForm from "../CourseManagement/CourseForm";
-import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import courseService from "../../services/courseService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
@@ -52,13 +52,13 @@ export default class CourseManagement extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button type='primary' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
+                    <Button className='mr-2' icon={<EditOutlined />} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
                     </Button>
 
 
-                    <Button type='danger' icon={<DeleteOutlined />} onClick={(e) => {
+                    <Button icon={<DeleteOutlined />} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
 
@@ -91,6 +91,7 @@ export default class CourseManagement extends React.Component {
             onOk: () => {
                 courseService.deleteCourse(courseId).then(response => {
                     if (response.data.success) {
+                        this.openNotificationWithIcon("success", "Course", response.data.msg);
                         this.loadTable()
                     }
                 })
@@ -100,6 +101,13 @@ export default class CourseManagement extends React.Component {
 
     showDeleteConfirmation(courseId) {
         this.deleteCourse(courseId);
+    }
+
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
     }
 
     showModal(isNewRecord, record) {

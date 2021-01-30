@@ -1,11 +1,12 @@
 import React from "react";
-import {Table, Space, Button, Modal, Popconfirm, Input, Tag, Select} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input, Tag, Select, notification} from "antd";
 import { DatePicker } from 'antd';
 import studentService from "../../services/studentService";
 import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import MarkAttendanceForm from "./MarkAttendanceForm";
 import {momentLocalizer} from "react-big-calendar";
 import moment from "moment";
+import EditAttendanceForm from "./EditAttendanceForm";
 
 const { Option } = Select;
 const {Search} = Input;
@@ -18,6 +19,7 @@ export default class AttendanceManagement extends React.Component {
 
         this.state = {
             visible: false,
+            isVisibleEdit: false,
             data: [],
             student: null,
             isSearchLoading: false,
@@ -58,13 +60,13 @@ export default class AttendanceManagement extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button type='primary' className='mr-2' icon={<EditOutlined/>} onClick={(e) => {
+                    <Button className='mr-2' icon={<EditOutlined/>} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
                     </Button>
 
 
-                    <Button type='danger' icon={<DeleteOutlined/>} onClick={(e) => {
+                    <Button icon={<DeleteOutlined/>} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
 
@@ -87,6 +89,13 @@ export default class AttendanceManagement extends React.Component {
         this.loadTable()
     }
 
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
+    }
+
     deleteStudent(studentId) {
         Modal.confirm({
             title: 'Delete',
@@ -97,6 +106,7 @@ export default class AttendanceManagement extends React.Component {
             onOk: () => {
                 studentService.deleteStudent(studentId).then(response => {
                     if (response.data.success) {
+                        this.openNotificationWithIcon("success", "Attendance", response.data.msg);
                         this.loadTable()
                     }
                 })
@@ -111,14 +121,15 @@ export default class AttendanceManagement extends React.Component {
     showModal(isNewRecord, record) {
         this.setState({
             student: record,
-            visible: true,
+            isVisibleEdit: true,
             isNewRecord: isNewRecord
         });
     }
 
     handleCancel = (e) => {
         this.setState({
-            visible: false
+            visible: false,
+            isVisibleEdit:false
         });
     };
 
@@ -135,14 +146,6 @@ export default class AttendanceManagement extends React.Component {
         }
     }
 
-    showModal(isNewRecord, record) {
-        this.setState({
-            student: record,
-            visible: true,
-            isNewRecord : isNewRecord
-        });
-    }
-
 
 
     render() {
@@ -157,7 +160,7 @@ export default class AttendanceManagement extends React.Component {
                     <div className="col-md-9">
                         <div className='controlsWrapper'>
                             <Select style={{width:'400px'}}>
-                                <Option>System Analysis and Design</Option>
+                                <Option>Certificate Program in Microsoft Office</Option>
                             </Select>
                             <DatePicker className='ml-2'/>
                             <Button
@@ -188,6 +191,19 @@ export default class AttendanceManagement extends React.Component {
                             width={900}
                         >
                             <MarkAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                        </Modal>
+
+                        <Modal
+                            destroyOnClose={true}
+                            visible={this.state.isVisibleEdit}
+                            onCancel={(e) => {
+                                this.handleCancel(e)
+                            }}
+                            title="Edit Attendance Record"
+                            footer={[]}
+                            width={500}
+                        >
+                            <EditAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>

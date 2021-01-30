@@ -9,7 +9,7 @@ const { Meta } = Card;
 
 const {Option} = Select;
 
-export default class MarkAttendanceForm extends React.Component {
+export default class EditAttendanceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -104,145 +104,58 @@ export default class MarkAttendanceForm extends React.Component {
   }
 
   async onSubmitHandler(event) {
-    this.resetErrorLabels();
-    let haveErrors = false;
-
-    // Validate first name
-    if (!this.state.firstName) {
-      this.setValidationError("firstNameError", "First name cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate middle name
-    if (!this.state.middleName) {
-      this.setValidationError("middleNameError", "Middle name cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate last name
-    if (!this.state.lastName) {
-      this.setValidationError("lastNameError", "Last name cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate address
-    if (!this.state.address) {
-      this.setValidationError("addressError", "Address cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate contact no
-    if (!this.state.contactNo) {
-      this.setValidationError("contactNoError", "Contact No cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate DOB
-    if (!this.state.dob) {
-      this.setValidationError("dobError", "DOB cannot be empty");
-      haveErrors = true
-    }
-
-    // Validate email
-    if (!this.state.email) {
-      this.setValidationError("emailError", "Email cannot be empty");
-      haveErrors = true
-    }
-
-    if(haveErrors) return
-
-    const payload = {
-      branchId: 2,
-      firstName: this.state.firstName,
-      middleName: this.state.middleName,
-      lastName: this.state.lastName,
-      address: this.state.address,
-      gender: this.state.gender,
-      contactNo: this.state.contactNo,
-      dob: this.state.dob,
-      email: this.state.email,
-    }
-
-    let response = null
-    if (this.props.isNewRecord) {
-      response = await studentService.saveStudent(payload);
-    }else{
-      response = await studentService.updateStudent(this.state.studentID, payload);
-    }
-
-    if (response.data.success) {
-      this.openNotificationWithIcon("success", "Student", response.data.msg);
-      this.resetErrorLabels();
-      this.resetFields();
-      this.props.loadTable();
-    }else{
-      this.openNotificationWithIcon("error", "Student", response.data.msg);
-    }
-
+    this.openNotificationWithIcon("success", "Attendance", "Successfully Updated");
   }
 
   render() {
     return (
         <form>
           <div className='row'>
-            <div className='col-md-6'>
-              <Form.Item label="Scan QR" name="profileImage">
-                <QrReader
-                    delay={300}
-                    onError={this.handleError}
-                    onScan={this.handleScan}
-                    style={{ width: '400px' }}
-                />
-              </Form.Item>
-            </div>
-            <div className='col-md-6'>
+            <div className='col-md-12'>
 
               <Form.Item>
                 <div className='row'>
                   <div className='col-md-3'>
-                    <label>Select Date</label>
+                    <label>Status</label>
                   </div>
 
                   <div className='col-md-9'>
-                    <DatePicker style={{width:'100%'}}/>
-                  </div>
-                </div>
-              </Form.Item>
-
-              <Form.Item>
-                <div className='row'>
-                  <div className='col-md-3'>
-                    <label>Select Class</label>
-                  </div>
-
-                  <div className='col-md-9'>
-                    <Select style={{width:'100%'}}>
-                      <Option>Certificate Program in Microsoft Office</Option>
+                    <Select placeholder="Select Status">
+                      <Option>Present</Option>
+                      <Option>Absent</Option>
                     </Select>
                   </div>
                 </div>
               </Form.Item>
 
+
               <Form.Item>
                 <div className='row'>
                   <div className='col-md-3'>
-                    <label>Student Profile</label>
+                    <label>Notes</label>
                   </div>
 
                   <div className='col-md-9'>
-                    <Card
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src={window.location.origin+"/profile_pic.jpeg"} />}
-                    >
-                      <Meta title={this.state.result} description="1655457" />
-                    </Card>
+                    <TextArea>
+
+                    </TextArea>
                   </div>
                 </div>
               </Form.Item>
 
-
-
+              <Form.Item>
+                <div className='row'>
+                  <div className='col-md-12 text-right'>
+                    <Button
+                        className="form-button submit-button"
+                        type="primary"
+                        onClick={this.onSubmitHandler}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </div>
+              </Form.Item>
 
             </div>
           </div>

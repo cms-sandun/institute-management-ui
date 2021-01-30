@@ -86,12 +86,23 @@ export default class CourseForm extends React.Component {
         if (!this.state.description) {
             this.setValidationError("descriptionError", "Description cannot be empty");
             haveErrors = true
+        }else{
+            if(this.state.description.length >= 400){
+                this.setValidationError("descriptionError", "Description should not exceed 400 characters");
+                haveErrors = true
+            }
         }
 
         // Validate last name
         if (!this.state.courseFee) {
             this.setValidationError("courseFeeError", "Course fee cannot be empty");
             haveErrors = true
+        }else{
+            const regex = /^((\d{1,3}|\s*){1})((\,\d{3}|\d)*)(\s*|\.(\d{2}))$/;
+            if(!regex.test(this.state.courseFee)){
+                this.setValidationError("courseFeeError", "Course fee is not valid");
+                haveErrors = true
+            }
         }
 
         if (haveErrors) return
