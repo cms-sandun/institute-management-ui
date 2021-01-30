@@ -79,6 +79,7 @@ export default class CourseManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Course", "View");
     }
 
     deleteCourse(courseId) {

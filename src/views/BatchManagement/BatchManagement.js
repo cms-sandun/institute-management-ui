@@ -79,6 +79,7 @@ export default class BatchManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Batch", "View");
     }
 
     deleteBatch(batchId) {

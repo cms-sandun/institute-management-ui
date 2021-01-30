@@ -84,6 +84,7 @@ export default class EmployeeManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Employee", "View");
     }
 
     deleteEmployee(employeeId) {

@@ -90,6 +90,7 @@ export default class UserManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Users", "View");
     }
 
     deleteUser(userId) {

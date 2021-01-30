@@ -87,6 +87,7 @@ export default class AttendanceManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Attendance", "View");
     }
 
     openNotificationWithIcon(type, title, msg) {

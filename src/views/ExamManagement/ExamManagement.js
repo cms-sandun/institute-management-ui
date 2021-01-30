@@ -52,13 +52,13 @@ export default class ExamManagement extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button type='primary' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
+                    <Button className='mr-2' icon={<EditOutlined />} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
                     </Button>
 
 
-                    <Button type='danger' icon={<DeleteOutlined />} onClick={(e) => {
+                    <Button icon={<DeleteOutlined />} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
 
@@ -79,6 +79,7 @@ export default class ExamManagement extends React.Component {
 
     componentDidMount() {
         this.loadTable()
+        this.props.setBreadCrumb("Exams", "View");
     }
 
     deleteExam(examId) {

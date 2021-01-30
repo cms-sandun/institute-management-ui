@@ -30,17 +30,34 @@ import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
+
 export default class Dashboard extends React.Component {
-  state = {
-    collapsed: false,
-    isDrawerVisible: false
-  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      collapsed: false,
+      isDrawerVisible: false,
+      breadcrumbMainPath:'',
+      breadcrumbSubPath:''
+    };
+
+   //this.setBreadCrumb = this.setBreadCrumb.bind(this);
+  }
 
   showDrawer = () => {
     this.setState({
       isDrawerVisible: true,
     });
   };
+
+  setBreadCrumb = (mainPath, subPath) =>{
+    this.setState({
+      breadcrumbMainPath:mainPath,
+      breadcrumbSubPath:subPath,
+    })
+  }
 
   onCloseDrawer = () => {
     this.setState({
@@ -120,23 +137,41 @@ export default class Dashboard extends React.Component {
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item> <Link to='/'>Batches</Link></Breadcrumb.Item>
-              <Breadcrumb.Item> <Link to='/'>View</Link></Breadcrumb.Item>
+              <Breadcrumb.Item> <Link to='/'>{this.state.breadcrumbMainPath}</Link></Breadcrumb.Item>
+              <Breadcrumb.Item> <Link to='/'>{this.state.breadcrumbSubPath}</Link></Breadcrumb.Item>
             </Breadcrumb>
             <div
               className="site-layout-background"
               style={{ padding: 24, minHeight: '100%' }}
             >
               <Route path="/" exact render={()=><h1>This is Home</h1>} />
-              <Route path="/students" exact component={StudentManagement} />
-              <Route path="/employees" exact component={EmployeeManagement} />
-              <Route path="/batches" exact component={BatchManagement} />
-              <Route path="/courses" exact component={CourseManagement} />
-              <Route path="/exams" exact component={ExamManagement} />
-              <Route path="/attendance" exact component={AttendanceManagement} />
-              <Route path="/calendar" exact component={EventsCalendar} />
-              <Route path="/login" exact component={Login} />
-              <Route path="/users" exact component={UserManagement} />
+              <Route path="/students" exact render={(props) => (
+                  <StudentManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )}/>
+              <Route path="/employees" exact render={(props) => (
+                  <EmployeeManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/batches" exact render={(props) => (
+                  <BatchManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/courses" exact render={(props) => (
+                  <CourseManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/exams" exact render={(props) => (
+                  <ExamManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/attendance" exact render={(props) => (
+                  <AttendanceManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/calendar" exact render={(props) => (
+                  <EventsCalendar {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/login" exact render={(props) => (
+                  <Login {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/users" exact render={(props) => (
+                  <UserManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
             </div>
           </Content>
           <Drawer

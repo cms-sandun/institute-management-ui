@@ -89,9 +89,9 @@ export default class StudentManagement extends React.Component {
         })
     }
 
-
     componentDidMount() {
-        this.loadTable()
+        this.loadTable();
+        this.props.setBreadCrumb("Students", "View");
     }
 
     openNotificationWithIcon(type, title, msg) {

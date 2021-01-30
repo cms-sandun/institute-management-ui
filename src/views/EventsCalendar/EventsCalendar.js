@@ -31,6 +31,8 @@ export default class EventsCalendar extends React.Component {
       emailError: ""
     };
 
+
+
     //console.log(this.props.student)
 
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
@@ -166,6 +168,10 @@ export default class EventsCalendar extends React.Component {
       this.openNotificationWithIcon("error", "Student", response.data.msg);
     }
 
+  }
+
+  componentDidMount() {
+    this.props.setBreadCrumb("Calendar", "View");
   }
 
   myEventsList = [
