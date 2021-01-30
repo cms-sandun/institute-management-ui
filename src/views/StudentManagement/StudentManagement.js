@@ -1,6 +1,6 @@
 import React from "react";
 import StudentForm from "./StudentForm";
-import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import studentService from "../../services/studentService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
@@ -27,6 +27,14 @@ export default class StudentManagement extends React.Component {
     }
 
     columns = [
+        {
+            title: "",
+            render: (text, record) => (
+                <div>
+                    <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.png"}/>
+                </div>
+            ),
+        },
         {
             title: "First Name",
             dataIndex: "first_name",
@@ -86,6 +94,13 @@ export default class StudentManagement extends React.Component {
         this.loadTable()
     }
 
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
+    }
+
     deleteStudent(studentId) {
         Modal.confirm({
             title: 'Delete',
@@ -96,7 +111,10 @@ export default class StudentManagement extends React.Component {
             onOk: () => {
                 studentService.deleteStudent(studentId).then(response => {
                     if (response.data.success) {
-                        this.loadTable()
+                        this.openNotificationWithIcon("success", "Student", response.data.msg);
+                        this.loadTable();
+                    }else{
+                        this.openNotificationWithIcon("error", "Student", response.data.msg);
                     }
                 })
             }
