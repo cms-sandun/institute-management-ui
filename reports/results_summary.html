@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    <title>Hello, world!</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+
+
+    <style>
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container border" style="min-height: 1000px; max-width: 900px">
+    <div class="row" style="background-color: #dddbdb; min-height: 25px">
+
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h1 class='mt-5 text-center'>Physics - Result Summary</h1>
+            <h5 class='mt-1 text-center'>(2019)</h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 pt-5">
+            <p><strong>Branch :</strong> Gampaha</p>
+            <p><strong>Report Date :</strong> 2021-01-10</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col pt-3">
+            <h4 class='mt-5 text-center mb-3'>Summary Chart</h4>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <canvas id="myPieChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+<script>
+
+    data = {
+        datasets: [{
+            data: [20, 10, 30, 10, 30],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ]
+        }],
+
+        labels: [
+            'A',
+            'B',
+            'C',
+            'S',
+            'F'
+        ]
+    };
+
+
+    var ctx = document.getElementById('myPieChart').getContext('2d');
+
+    // For a pie chart
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: {
+            plugins: {
+                labels: {
+                    fontSize: 40
+                }
+            }
+        }
+    });
+</script>
+
+</html>
