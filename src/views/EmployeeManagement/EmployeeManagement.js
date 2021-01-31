@@ -28,6 +28,14 @@ export default class EmployeeManagement extends React.Component {
 
     columns = [
         {
+            title: "",
+            render: (text, record) => (
+                <div>
+                    <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.jpeg"}/>
+                </div>
+            ),
+        },
+        {
             title: "First Name",
             dataIndex: "first_name",
             key: "firstName",
