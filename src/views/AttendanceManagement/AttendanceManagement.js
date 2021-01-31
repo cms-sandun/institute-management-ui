@@ -127,6 +127,14 @@ export default class AttendanceManagement extends React.Component {
         });
     }
 
+    showMarkAttendanceModal(isNewRecord, record) {
+        this.setState({
+            student: record,
+            visible: true,
+            isNewRecord: isNewRecord
+        });
+    }
+
     handleCancel = (e) => {
         this.setState({
             visible: false,
@@ -169,7 +177,7 @@ export default class AttendanceManagement extends React.Component {
                                 type="primary"
                                 className="success-btn"
                                 onClick={()=>{
-                                    this.showModal(true, null)
+                                    this.showMarkAttendanceModal(true, null)
                                 }}
                             >
                                 Mark Attendance

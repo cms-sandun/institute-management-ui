@@ -68,21 +68,21 @@ export default class UserManagement extends React.Component {
     loadTable() {
         this.setState({
             data: [
-                {
-                    "username": "Sandun",
-                    "role": "Admin",
-                    "created_at": "2021-01-23"
-                },
+                // {
+                //     "username": "Sandun",
+                //     "role": "Admin",
+                //     "created_at": "2021-01-23"
+                // },
                 {
                     "username": "Sandamali",
                     "role": "User",
                     "created_at": "2021-01-24"
                 },
-                {
-                    "username": "Saman",
-                    "role": "Admin",
-                    "created_at": "2021-01-25"
-                }
+                // {
+                //     "username": "Saman",
+                //     "role": "Admin",
+                //     "created_at": "2021-01-25"
+                // }
             ]
         })
     }
