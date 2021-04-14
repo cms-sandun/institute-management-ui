@@ -7,5 +7,6 @@ export const API = {
   batches: `${API_PATH}/batches`,
   branches: `${API_PATH}/branches`,
   courses: `${API_PATH}/courses`,
-  exams: `${API_PATH}/exams`
+  exams: `${API_PATH}/exams`,
+  users: `${API_PATH}/users`,
 };

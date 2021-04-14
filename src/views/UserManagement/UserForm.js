@@ -3,6 +3,7 @@ import {Form, Input, Upload, Select, Button, notification, DatePicker} from "ant
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
+import userService from "../../services/userService";
 
 const {Option} = Select;
 
@@ -10,56 +11,40 @@ export default class UserForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            studentID: props.student ? props.student.id : '',
-            firstName: props.student ? props.student.first_name : '',
-            lastName: props.student ? props.student.last_name : '',
-            middleName: props.student ? props.student.middle_name : '',
-            address: props.student ? props.student.address : '',
-            gender: props.student ? props.student.gender : 'male',
-            contactNo: props.student ? props.student.contact_no : '',
-            dob: props.student ? props.student.dob : '',
-            email: props.student ? props.student.email : '',
-            firstNameError: "",
-            middleNameError: "",
-            lastNameError: "",
-            addressError: "",
-            contactNoError: "",
-            dobError: "",
-            emailError: "",
-            employee: ''
+            userID:'',
+            employee: '',
+            userName: props.student ? props.student.first_name : '',
+            password: props.student ? props.student.last_name : '',
+            role: props.student ? props.student.middle_name : '',
+            employeeError: "",
+            userNameError: "",
+            passwordError: "",
+            roleError: ""
         };
-
-        //console.log(this.props.student)
 
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.resetErrorLabels = this.resetErrorLabels.bind(this);
         this.setValidationError = this.setValidationError.bind(this);
         this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
         this.onEmployeeChangeHandler = this.onEmployeeChangeHandler.bind(this);
+        this.onRoleChangeHandler = this.onRoleChangeHandler.bind(this);
     }
 
     resetErrorLabels() {
         this.setState({
-            firstNameError: "",
-            middleNameError: "",
-            lastNameError: "",
-            addressError: "",
-            contactNoError: "",
-            dobError: "",
-            emailError: ""
+            employeeError: "",
+            userNameError: "",
+            passwordError: "",
+            roleError: ""
         });
     }
 
     resetFields() {
         this.setState({
-            firstName: "",
-            lastName: "",
-            middleName: "",
-            address: "",
-            gender: "male",
-            contactNo: "",
-            dob: "",
-            email: "",
+            employee: "",
+            userName: "",
+            password: "",
+            role: ""
         });
     }
 
@@ -82,6 +67,12 @@ export default class UserForm extends React.Component {
         });
     }
 
+    onRoleChangeHandler(value) {
+        this.setState({
+            role: value,
+        });
+    }
+
     setValidationError(errorField, errorMsg) {
         this.setState({
             [errorField]: errorMsg
@@ -93,75 +84,52 @@ export default class UserForm extends React.Component {
         let haveErrors = false;
 
         // Validate first name
-        if (!this.state.firstName) {
-            this.setValidationError("firstNameError", "First name cannot be empty");
+        if (!this.state.employee) {
+            this.setValidationError("employeeError", "Select employee");
             haveErrors = true
         }
 
         // Validate middle name
-        if (!this.state.middleName) {
-            this.setValidationError("middleNameError", "Middle name cannot be empty");
+        if (!this.state.userName) {
+            this.setValidationError("userNameError", "Enter username");
             haveErrors = true
         }
 
         // Validate last name
-        if (!this.state.lastName) {
-            this.setValidationError("lastNameError", "Last name cannot be empty");
+        if (!this.state.password) {
+            this.setValidationError("passwordError", "Enter password");
             haveErrors = true
         }
 
         // Validate address
-        if (!this.state.address) {
-            this.setValidationError("addressError", "Address cannot be empty");
-            haveErrors = true
-        }
-
-        // Validate contact no
-        if (!this.state.contactNo) {
-            this.setValidationError("contactNoError", "Contact No cannot be empty");
-            haveErrors = true
-        }
-
-        // Validate DOB
-        if (!this.state.dob) {
-            this.setValidationError("dobError", "DOB cannot be empty");
-            haveErrors = true
-        }
-
-        // Validate email
-        if (!this.state.email) {
-            this.setValidationError("emailError", "Email cannot be empty");
+        if (!this.state.role) {
+            this.setValidationError("roleError", "Select role");
             haveErrors = true
         }
 
         if (haveErrors) return
 
         const payload = {
-            branchId: 2,
-            firstName: this.state.firstName,
-            middleName: this.state.middleName,
-            lastName: this.state.lastName,
-            address: this.state.address,
-            gender: this.state.gender,
-            contactNo: this.state.contactNo,
-            dob: this.state.dob,
-            email: this.state.email,
+            name: this.state.userName,
+            password: this.state.password,
+            user_type: this.state.role,
+            employee: this.state.employee
         }
 
         let response = null
         if (this.props.isNewRecord) {
-            response = await studentService.saveStudent(payload);
+            response = await userService.saveUser(payload);
         } else {
-            response = await studentService.updateStudent(this.state.studentID, payload);
+            response = await userService.saveUser(this.state.userID, payload);
         }
 
         if (response.data.success) {
-            this.openNotificationWithIcon("success", "Student", response.data.msg);
+            this.openNotificationWithIcon("success", "User", response.data.msg);
             this.resetErrorLabels();
             this.resetFields();
             this.props.loadTable();
         } else {
-            this.openNotificationWithIcon("error", "Student", response.data.msg);
+            this.openNotificationWithIcon("error", "User", response.data.msg);
         }
 
     }
@@ -173,7 +141,7 @@ export default class UserForm extends React.Component {
                     <div className='col-md-12'>
                         <Form.Item>
                             <Select
-                                defaultSelected={this.state.employee}
+                                // defaultSelected={this.state.employee}
                                 placeholder="Select Employee"
                                 name="employee" onChange={this.onEmployeeChangeHandler}
 
@@ -183,48 +151,49 @@ export default class UserForm extends React.Component {
                                 <Option value={3}>Saman Perera</Option>
                             </Select>
                             <label className="error-label">
-                                {this.state.firstNameError}
+                                {this.state.employeeError}
                             </label>
                         </Form.Item>
 
                         <Form.Item>
                             <Input
                                 onChange={this.onInputFieldChangeHandler}
-                                name="middleName"
-                                value={this.state.middleName}
+                                name="userName"
+                                value={this.state.userName}
                                 placeholder='User Name'
                             />
                             <label className="error-label">
-                                {this.state.middleNameError}
+                                {this.state.userNameError}
                             </label>
                         </Form.Item>
 
                         <Form.Item>
                             <Input
-                                disabled
                                 type='password'
                                 onChange={this.onInputFieldChangeHandler}
-                                name="lastName"
-                                value={3764872637}
+                                name="password"
+                                value={this.state.password}
                                 placeholder='Password'
                             />
                             <label className="error-label">
-                                {this.state.lastNameError}
+                                {this.state.passwordError}
                             </label>
-                          <a href='#'>Reset Password</a>
                         </Form.Item>
 
                         <Form.Item>
                             <Select
-                                onChange={this.onGenderChangeHandler}
-                                name="gender"
+                                onChange={this.onRoleChangeHandler}
+                                name="role"
                                 placeholder="Select Role"
                             >
                                 <Option value="admin">Admin</Option>
-                                <Option value="receptionist">Receptionist</Option>
-                                <Option value="receptionist">Teacher</Option>
-                                <Option value="receptionist">Student</Option>
+                                <Option value="parent">Parent</Option>
+                                <Option value="teacher">Teacher</Option>
+                                <Option value="student">Student</Option>
                             </Select>
+                            <label className="error-label">
+                                {this.state.roleError}
+                            </label>
                         </Form.Item>
 
                         <Form.Item style={{textAlign: "right"}}>

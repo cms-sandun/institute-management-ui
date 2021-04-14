@@ -1,8 +1,10 @@
 import React from "react";
 import UserForm from "./UserForm";
-import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined, WindowsOutlined} from '@ant-design/icons';
 import ManageRolesForm from "./ManageRolesForm";
+import studentService from "../../services/studentService";
+import userService from "../../services/userService";
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -35,8 +37,8 @@ export default class UserManagement extends React.Component {
         },
         {
             title: "Role",
-            dataIndex: "role",
-            key: "role",
+            dataIndex: "user_type",
+            key: "user_type",
         },
         {
             title: "Created At",
@@ -66,25 +68,18 @@ export default class UserManagement extends React.Component {
     ];
 
     loadTable() {
-        this.setState({
-            data: [
-                // {
-                //     "username": "Sandun",
-                //     "role": "Admin",
-                //     "created_at": "2021-01-23"
-                // },
-                {
-                    "username": "Sandamali",
-                    "role": "User",
-                    "created_at": "2021-01-24"
-                },
-                // {
-                //     "username": "Saman",
-                //     "role": "Admin",
-                //     "created_at": "2021-01-25"
-                // }
-            ]
+        userService.getAllUsers().then(response => {
+            this.setState({
+                data: response.data.data
+            })
         })
+    }
+
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
     }
 
 
@@ -96,12 +91,19 @@ export default class UserManagement extends React.Component {
     deleteUser(userId) {
         Modal.confirm({
             title: 'Delete',
-            icon: <ExclamationCircleOutlined/>,
+            icon: <ExclamationCircleOutlined />,
             content: 'Do you want to delete?',
             okText: 'Yes',
             cancelText: 'No',
             onOk: () => {
-
+                userService.deleteUser(userId).then(response => {
+                    if (response.data.success) {
+                        this.openNotificationWithIcon("success", "User", response.data.msg);
+                        this.loadTable();
+                    }else{
+                        this.openNotificationWithIcon("error", "User", response.data.msg);
+                    }
+                })
             }
         });
     }
