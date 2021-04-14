@@ -2,7 +2,7 @@ import React from "react";
 import {Form, Input, Upload, Select, Button, notification, DatePicker} from "antd";
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-import studentService from "../../services/studentService";
+import employeeService from "../../services/employeeService";
 
 const {Option} = Select;
 
@@ -10,33 +10,37 @@ export default class EmployeeForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      studentID: props.student ? props.student.id : '',
-      firstName: props.student ? props.student.first_name : '',
-      lastName: props.student ? props.student.last_name : '',
-      middleName: props.student ? props.student.middle_name : '',
-      address: props.student ? props.student.address : '',
-      gender: props.student ? props.student.gender : 'male',
-      contactNo: props.student ? props.student.contact_no : '',
-      dob: props.student ? props.student.dob : '',
-      email: props.student ? props.student.email : '',
-      qualifications: props.student ? props.student.qualifications : '',
-      type: props.student ? props.student.type : 'academic',
+      employeeID: props.employee ? props.employee.id : '',
+      profileImage: props.employee ? props.employee.profileImage : '',
+      firstName: props.employee ? props.employee.first_name : '',
+      middleName: props.employee ? props.employee.middle_name : '',
+      lastName: props.employee ? props.employee.last_name : '',
+      empNo: props.employee ? props.employee.empNo : '',
+      address: props.employee ? props.employee.address : '',
+      gender: props.employee ? props.employee.gender : 'male',
+      contactNo: props.employee ? props.employee.contact_no : '',
+      email: props.employee ? props.employee.email : '',
+      dob: props.employee ? props.employee.dob : '',
+      qualifications: props.employee ? props.employee.qualifications : '',
+      type: props.employee ? props.employee.type : 'academic',
       firstNameError: "",
       middleNameError: "",
       lastNameError: "",
       addressError: "",
       contactNoError: "",
       dobError: "",
-      emailError: ""
+      emailError: "",
+      qualificationsError: "",
     };
 
-    //console.log(this.props.student)
+    //console.log(this.props.employee)
 
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
     this.resetErrorLabels = this.resetErrorLabels.bind(this);
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
     this.onGenderChangeHandler = this.onGenderChangeHandler.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
   }
 
   resetErrorLabels() {
@@ -47,7 +51,8 @@ export default class EmployeeForm extends React.Component {
       addressError: "",
       contactNoError: "",
       dobError: "",
-      emailError: ""
+      emailError: "",
+      qualificationsError: ""
     });
   }
 
@@ -61,6 +66,8 @@ export default class EmployeeForm extends React.Component {
       contactNo: "",
       dob: "",
       email: "",
+      qualifications: "",
+      profileImage: "",
     });
   }
 
@@ -87,6 +94,15 @@ export default class EmployeeForm extends React.Component {
     this.setState({
       [errorField]: errorMsg
     });
+  }
+
+  handleImageUpload = (event) => {
+    const file = event.file;
+    if (file) {
+      this.setState({
+        profileImage:file
+      })
+    }
   }
 
   async onSubmitHandler(event) {
@@ -137,32 +153,48 @@ export default class EmployeeForm extends React.Component {
 
     if(haveErrors) return
 
-    const payload = {
-      branchId: 2,
-      firstName: this.state.firstName,
-      middleName: this.state.middleName,
-      lastName: this.state.lastName,
-      address: this.state.address,
-      gender: this.state.gender,
-      contactNo: this.state.contactNo,
-      dob: this.state.dob,
-      email: this.state.email,
-    }
+    // const payload = {
+    //   branchId: 1,
+    //   firstName: this.state.firstName,
+    //   middleName: this.state.middleName,
+    //   lastName: this.state.lastName,
+    //   address: this.state.address,
+    //   gender: this.state.gender,
+    //   contactNo: this.state.contactNo,
+    //   dob: this.state.dob,
+    //   email: this.state.email,
+    //   qualifications: this.state.qualifications,
+    //   type: this.state.type,
+    // }
+
+    const payload = new FormData();
+    payload.append('branchId',1)
+    payload.append('profile_image',this.state.profileImage)
+    payload.append('firstName',this.state.firstName)
+    payload.append('middleName',this.state.middleName)
+    payload.append('lastName',this.state.lastName)
+    payload.append('address',this.state.address)
+    payload.append('gender',this.state.gender)
+    payload.append('contactNo',this.state.contactNo)
+    payload.append('dob',this.state.dob)
+    payload.append('email',this.state.email)
+    payload.append('qualifications',this.state.qualifications)
+    payload.append('type',this.state.type)
 
     let response = null
     if (this.props.isNewRecord) {
-      response = await studentService.saveStudent(payload);
+      response = await employeeService.saveEmployee(payload);
     }else{
-      response = await studentService.updateStudent(this.state.studentID, payload);
+      response = await employeeService.updateEmployee(this.state.employeeID, payload);
     }
 
     if (response.data.success) {
-      this.openNotificationWithIcon("success", "Student", response.data.msg);
+      this.openNotificationWithIcon("success", "Employee", response.data.msg);
       this.resetErrorLabels();
       this.resetFields();
       this.props.loadTable();
     }else{
-      this.openNotificationWithIcon("error", "Student", response.data.msg);
+      this.openNotificationWithIcon("error", "Employee", response.data.msg);
     }
 
   }
@@ -175,8 +207,8 @@ export default class EmployeeForm extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-4'>
-              <Form.Item label="Profile Image" name="profileImage">
-                <Upload.Dragger name="files" action="/upload.do">
+              <Form.Item label="Profile Image">
+                <Upload.Dragger name="profileImage" onChange={this.handleImageUpload}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined/>
                   </p>
@@ -300,12 +332,12 @@ export default class EmployeeForm extends React.Component {
             <div className='col-md-4'>
               <Form.Item>
                 <TextArea
-                    name="qualifications"s
-                    value={this.state.qualification}
+                    name="qualifications"
+                    value={this.state.qualifications}
                     placeholder='Qualifications'
                 />
                 <label className="error-label">
-                  {this.state.dobError}
+                  {this.state.qualificationsError}
                 </label>
               </Form.Item>
 

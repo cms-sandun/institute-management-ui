@@ -4,6 +4,7 @@ import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
 import userService from "../../services/userService";
+import employeeService from "../../services/employeeService";
 
 const {Option} = Select;
 
@@ -16,6 +17,7 @@ export default class UserForm extends React.Component {
             userName: props.student ? props.student.first_name : '',
             password: props.student ? props.student.last_name : '',
             role: props.student ? props.student.middle_name : '',
+            employeeList:'',
             employeeError: "",
             userNameError: "",
             passwordError: "",
@@ -37,6 +39,16 @@ export default class UserForm extends React.Component {
             passwordError: "",
             roleError: ""
         });
+    }
+
+    loadEmployees(){
+        employeeService.getAllEmployees().then(
+            response => {
+                this.setState({
+                    employeeList: response.data.data
+                })
+            }
+        )
     }
 
     resetFields() {
@@ -77,6 +89,10 @@ export default class UserForm extends React.Component {
         this.setState({
             [errorField]: errorMsg
         });
+    }
+
+    componentDidMount() {
+        this.loadEmployees()
     }
 
     async onSubmitHandler(event) {
@@ -134,6 +150,18 @@ export default class UserForm extends React.Component {
 
     }
 
+     employeeArray = () => {
+        return (
+            <>
+                {this.state.employeeList.length >0 && this.state.employeeList.map(emp => {
+                    return (
+                        <Option key={emp.id} value={emp.id}>{emp.first_name}</Option>
+                    )
+                })}
+            </>
+        )
+    }
+
     render() {
         return (
             <form>
@@ -146,9 +174,7 @@ export default class UserForm extends React.Component {
                                 name="employee" onChange={this.onEmployeeChangeHandler}
 
                             >
-                                <Option value={1}>Sandun Perera</Option>
-                                <Option value={2}>Sandamali Niroshini</Option>
-                                <Option value={3}>Saman Perera</Option>
+                                {this.employeeArray()}
                             </Select>
                             <label className="error-label">
                                 {this.state.employeeError}
