@@ -111,7 +111,7 @@ export default class Dashboard extends React.Component {
             <Link to='/'>Payments</Link>
             </Menu.Item>
             <Menu.Item key="11" icon={<BarChartOutlined />}>
-            <Link to='/attendance'>Attendance</Link>
+            <Link to='/attendance'>Stu. Attendance</Link>
             </Menu.Item>
             <SubMenu key="12" icon={<AreaChartOutlined />} title="Reports">
               {/*<Menu.Item key="13"> <Link to='/'>Students</Link></Menu.Item>
