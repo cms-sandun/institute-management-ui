@@ -7,7 +7,7 @@ const { Meta } = Card;
 
 const {Option} = Select;
 
-export default class MarkAttendanceForm extends React.Component {
+export default class StuMarkAttendanceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

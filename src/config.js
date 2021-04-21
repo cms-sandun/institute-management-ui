@@ -9,4 +9,5 @@ export const API = {
   courses: `${API_PATH}/courses`,
   exams: `${API_PATH}/exams`,
   users: `${API_PATH}/users`,
+  classes: `${API_PATH}/classes`,
 };

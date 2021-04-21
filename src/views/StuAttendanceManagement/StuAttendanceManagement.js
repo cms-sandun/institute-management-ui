@@ -3,17 +3,18 @@ import {Table, Space, Button, Modal, Popconfirm, Input, Tag, Select, notificatio
 import { DatePicker } from 'antd';
 import studentService from "../../services/studentService";
 import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
-import MarkAttendanceForm from "./MarkAttendanceForm";
+import StuMarkAttendanceForm from "./StuMarkAttendanceForm";
 import {momentLocalizer} from "react-big-calendar";
 import moment from "moment";
-import EditAttendanceForm from "./EditAttendanceForm";
+import StuEditAttendanceForm from "./StuEditAttendanceForm";
+import classService from "../../services/classService";
 
 const { Option } = Select;
 const {Search} = Input;
 const localizer = momentLocalizer(moment);
 
 
-export default class AttendanceManagement extends React.Component {
+export default class StuAttendanceManagement extends React.Component {
     constructor(props) {
         super(props);
 
@@ -21,6 +22,7 @@ export default class AttendanceManagement extends React.Component {
             visible: false,
             isVisibleEdit: false,
             data: [],
+            classes: [],
             student: null,
             isSearchLoading: false,
             isNewRecord: true
@@ -31,6 +33,7 @@ export default class AttendanceManagement extends React.Component {
         this.deleteStudent = this.deleteStudent.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
+        this.loadClassesDropDown = this.loadClassesDropDown.bind(this);
     }
 
     columns = [
@@ -84,9 +87,18 @@ export default class AttendanceManagement extends React.Component {
         })
     }
 
+    loadClassesDropDown() {
+        classService.getAllClasss().then(response => {
+            this.setState({
+                classes: response.data.data
+            })
+        })
+    }
+
 
     componentDidMount() {
         this.loadTable()
+        this.loadClassesDropDown()
         this.props.setBreadCrumb("Attendance", "View");
     }
 
@@ -155,6 +167,14 @@ export default class AttendanceManagement extends React.Component {
         }
     }
 
+    getClassesDropDown(){
+        let classes = [];
+        this.state.classes.forEach(cls => {
+            classes.push(`<Option>${cls.name}</Option>`)
+        })
+        return classes;
+    }
+
 
 
     render() {
@@ -169,7 +189,7 @@ export default class AttendanceManagement extends React.Component {
                     <div className="col-md-9">
                         <div className='controlsWrapper'>
                             <Select style={{width:'400px'}}>
-                                <Option>Certificate Program in Microsoft Office</Option>
+                                {this.state.classes && this.getClassesDropDown()}
                             </Select>
                             <DatePicker className='ml-2'/>
                             <Button
@@ -199,7 +219,7 @@ export default class AttendanceManagement extends React.Component {
                             footer={[]}
                             width={900}
                         >
-                            <MarkAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <StuMarkAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
 
                         <Modal
@@ -212,7 +232,7 @@ export default class AttendanceManagement extends React.Component {
                             footer={[]}
                             width={500}
                         >
-                            <EditAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <StuEditAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>

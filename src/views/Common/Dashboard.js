@@ -2,15 +2,12 @@ import React from "react";
 import { Layout, Menu, Breadcrumb, Badge, Avatar,Drawer } from "antd";
 import { Route, Link } from "react-router-dom";
 import {
-  DesktopOutlined,
-  PieChartOutlined,
   NotificationOutlined,
   UserOutlined,
   UsergroupAddOutlined,
   BookOutlined,
   AreaChartOutlined,
   BarChartOutlined,
-  FieldTimeOutlined,
   CalendarOutlined,
   DollarCircleOutlined,
   BranchesOutlined,
@@ -21,11 +18,11 @@ import StudentManagement from "../StudentManagement/StudentManagement";
 import BatchManagement from "../BatchManagement/BatchManagement";
 import CourseManagement from "../CourseManagement/CourseManagement";
 import ExamManagement from "../ExamManagement/ExamManagement";
-import AttendanceManagement from "../AttendanceManagement/AttendanceManagement";
 import EventsCalendar from "../EventsCalendar/EventsCalendar";
 import Login from "./Login";
 import UserManagement from "../UserManagement/UserManagement";
 import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
+import StuAttendanceManagement from "../StuAttendanceManagement/StuAttendanceManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -161,7 +158,7 @@ export default class Dashboard extends React.Component {
                   <ExamManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
               )} />
               <Route path="/attendance" exact render={(props) => (
-                  <AttendanceManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+                  <StuAttendanceManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
               )} />
               <Route path="/calendar" exact render={(props) => (
                   <EventsCalendar {...props} setBreadCrumb={this.setBreadCrumb}/>
