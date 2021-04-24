@@ -168,11 +168,17 @@ export default class StuAttendanceManagement extends React.Component {
     }
 
     getClassesDropDown(){
-        let classes = [];
-        this.state.classes.forEach(cls => {
-            classes.push(`<Option>${cls.name}</Option>`)
-        })
-        return classes;
+        return (
+            <>
+                {this.state.classes.map(cls => {
+                    return (
+                        <Option value={cls.id} name={cls.name}>
+                            {cls.name}
+                        </Option>
+                    )
+                })}
+            </>
+        )
     }
 
 
@@ -188,7 +194,7 @@ export default class StuAttendanceManagement extends React.Component {
                     </div>
                     <div className="col-md-9">
                         <div className='controlsWrapper'>
-                            <Select style={{width:'400px'}}>
+                            <Select style={{width:'400px'}} placeholder='Select Class'>
                                 {this.state.classes && this.getClassesDropDown()}
                             </Select>
                             <DatePicker className='ml-2'/>

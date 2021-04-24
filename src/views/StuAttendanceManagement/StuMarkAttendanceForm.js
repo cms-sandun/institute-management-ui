@@ -1,9 +1,11 @@
 import React from "react";
-import {Form, Input, Upload, Select, DatePicker} from "antd";
+import {Form, Input, Upload, Select, DatePicker, Button, notification} from "antd";
 import studentService from "../../services/studentService";
 import QrReader from 'react-qr-reader'
-import { Card } from 'antd';
-const { Meta } = Card;
+import {Card} from 'antd';
+import studentAttendanceService from "../../services/studentAttendanceService";
+
+const {Meta} = Card;
 
 const {Option} = Select;
 
@@ -11,18 +13,21 @@ export default class StuMarkAttendanceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      result: ''
+      result: '',
+      isHiddenStuProfile: true
     };
 
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
+    this.submitAttendance = this.submitAttendance.bind(this);
   }
 
   handleScan = data => {
     if (data) {
-      studentService.getStudentById(data).then(response=>{
+      studentService.getStudentById(data).then(response => {
         this.setState({
-          result: response.data.data
+          result: response.data.data,
+          isHiddenStuProfile: false
         })
       })
     }
@@ -41,6 +46,36 @@ export default class StuMarkAttendanceForm extends React.Component {
     });
   }
 
+  openNotificationWithIcon(type, title, msg) {
+    notification[type]({
+      message: title,
+      description: msg,
+    });
+  }
+
+  submitAttendance() {
+    const entry = this.state.result;
+    if (entry) {
+      const payload = {
+        classes_id: 3,
+        student_id: entry.id,
+        status: 'present'
+      }
+
+      studentAttendanceService.saveAttendance(payload).then(response => {
+        this.setState({
+          isHiddenStuProfile: true
+        })
+
+        this.openNotificationWithIcon("success", "Attendance", response.data.msg);
+
+
+      })
+
+
+    }
+  }
+
   render() {
     return (
         <form>
@@ -51,56 +86,22 @@ export default class StuMarkAttendanceForm extends React.Component {
                     delay={300}
                     onError={this.handleError}
                     onScan={this.handleScan}
-                    style={{ width: '400px' }}
+                    style={{width: '400px'}}
                 />
               </Form.Item>
             </div>
             <div className='col-md-6'>
-
-              <Form.Item>
-                <div className='row'>
-                  <div className='col-md-3'>
-                    <label>Select Date</label>
-                  </div>
-
-                  <div className='col-md-9'>
-                    <DatePicker style={{width:'100%'}}/>
-                  </div>
-                </div>
+              <Form.Item label="Student Profile" name="selectedProfile" hidden={this.state.isHiddenStuProfile}>
+                <Card
+                    hoverable
+                    style={{width: '50%'}}
+                    cover={<img alt="example" src={window.location.origin + "/profile_pic.jpeg"}/>}
+                >
+                  <Meta title={this.state.result.first_name} description={this.state.result.id}/>
+                </Card>
+                <Button onClick={this.submitAttendance} type='primary' style={{width: '50%', marginTop: 10}}
+                        class="ant-btn ant-btn-primary success-btn">Next</Button>
               </Form.Item>
-
-              <Form.Item>
-                <div className='row'>
-                  <div className='col-md-3'>
-                    <label>Select Class</label>
-                  </div>
-
-                  <div className='col-md-9'>
-                    <Select style={{width:'100%'}}>
-                      <Option>Certificate Program in Microsoft Office</Option>
-                    </Select>
-                  </div>
-                </div>
-              </Form.Item>
-
-              <Form.Item>
-                <div className='row'>
-                  <div className='col-md-3'>
-                    <label>Student Profile</label>
-                  </div>
-
-                  <div className='col-md-9'>
-                    <Card
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src={window.location.origin+"/profile_pic.jpeg"} />}
-                    >
-                      <Meta title={this.state.result.first_name} description="1655457" />
-                    </Card>
-                  </div>
-                </div>
-              </Form.Item>
-
             </div>
           </div>
         </form>
