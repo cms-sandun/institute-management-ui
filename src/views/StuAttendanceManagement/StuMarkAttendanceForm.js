@@ -54,6 +54,7 @@ export default class StuMarkAttendanceForm extends React.Component {
   }
 
   submitAttendance() {
+
     const entry = this.state.result;
     if (entry) {
       const payload = {
@@ -66,13 +67,8 @@ export default class StuMarkAttendanceForm extends React.Component {
         this.setState({
           isHiddenStuProfile: true
         })
-
         this.openNotificationWithIcon("success", "Attendance", response.data.msg);
-
-
       })
-
-
     }
   }
 
