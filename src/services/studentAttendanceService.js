@@ -19,6 +19,10 @@ class StudentAttendanceService {
     return await axios.get(`${API.students_attendance}/${id}`)
   }
 
+  async getAttendanceByClassIdAndDate(classes_id, date) {
+    return await axios.get(`${API.students_attendance}/search?classes_id=${classes_id}&date=${date}`)
+  }
+
   async searchAttendances(searchText) {
     return await axios.get(`${API.students_attendance}/search?name=${searchText}`)
   }

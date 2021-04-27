@@ -8,6 +8,7 @@ import {momentLocalizer} from "react-big-calendar";
 import moment from "moment";
 import StuEditAttendanceForm from "./StuEditAttendanceForm";
 import classService from "../../services/classService";
+import studentAttendanceService from "../../services/studentAttendanceService";
 
 const { Option } = Select;
 const {Search} = Input;
@@ -25,7 +26,9 @@ export default class StuAttendanceManagement extends React.Component {
             classes: [],
             student: null,
             isSearchLoading: false,
-            isNewRecord: true
+            isNewRecord: true,
+            selectedClass:'',
+            selectedDate:''
         };
 
         this.showModal = this.showModal.bind(this);
@@ -165,6 +168,10 @@ export default class StuAttendanceManagement extends React.Component {
                 })
             })
         }
+    }
+
+    searchByClassAndDate(){
+        studentAttendanceService
     }
 
     getClassesDropDown(){
