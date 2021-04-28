@@ -27,6 +27,10 @@ class StudentAttendanceService {
     return await axios.get(`${API.students_attendance}/search?name=${searchText}`)
   }
 
+  async exportReport(classes_id, date) {
+    return await axios.get(`${API.students_attendance}/export?classes_id=${classes_id}&date=${date}`)
+  }
+
   async deleteAttendance(attendanceId) {
     return await axios.delete(`${API.students_attendance}/`+attendanceId)
   }

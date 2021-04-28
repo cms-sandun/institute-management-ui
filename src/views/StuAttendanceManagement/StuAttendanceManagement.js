@@ -39,6 +39,7 @@ export default class StuAttendanceManagement extends React.Component {
         this.searchByClassAndDate = this.searchByClassAndDate.bind(this);
         this.classOnChangeHandler = this.classOnChangeHandler.bind(this);
         this.dateOnChangeHandler = this.dateOnChangeHandler.bind(this);
+        this.exportReport = this.exportReport.bind(this);
     }
 
     columns = [
@@ -192,6 +193,16 @@ export default class StuAttendanceManagement extends React.Component {
         )
     }
 
+    exportReport(){
+        if (this.state.selectedClass != '' && this.state.selectedClass != undefined && this.state.selectedDate != '' && this.state.selectedDate != undefined) {
+            studentAttendanceService.exportReport(this.state.selectedClass, Moment(this.state.selectedDate).format('yyyy-MM-DD')).then(response => {
+                window.open("http://localhost:5000/"+response.data.data,'blank')
+            })
+        }else{
+            this.openNotificationWithIcon("warning","Warning","Select Class and Date")
+        }
+    }
+
 
     render() {
         return (
@@ -212,6 +223,14 @@ export default class StuAttendanceManagement extends React.Component {
                                 onClick={this.searchByClassAndDate}
                             >
                                 Load
+                            </Button>
+                            <Button
+                                style={{marginBottom: "10px", marginLeft:"10px", zIndex: '1'}}
+                                type="primary"
+                                className="success-btn"
+                                onClick={this.exportReport}
+                            >
+                                Export
                             </Button>
                         </div>
                     </div>
