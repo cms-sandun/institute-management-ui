@@ -44,8 +44,9 @@ export default class StuAttendanceManagement extends React.Component {
     columns = [
         {
             title: "Student Name",
-            dataIndex: "student_id",
-            key: "student_id",
+            render: (text, record) => (
+                record.student ? record.student.first_name : ''
+            )
         },
         {
             title: "Status",
