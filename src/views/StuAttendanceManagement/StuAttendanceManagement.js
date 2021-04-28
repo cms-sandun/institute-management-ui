@@ -1,6 +1,6 @@
 import React from "react";
 import {Table, Space, Button, Modal, Popconfirm, Input, Tag, Select, notification} from "antd";
-import { DatePicker } from 'antd';
+import {DatePicker} from 'antd';
 import studentService from "../../services/studentService";
 import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import StuMarkAttendanceForm from "./StuMarkAttendanceForm";
@@ -8,12 +8,12 @@ import {momentLocalizer} from "react-big-calendar";
 import moment from "moment";
 import StuEditAttendanceForm from "./StuEditAttendanceForm";
 import classService from "../../services/classService";
-import studentAttendanceService from "../../services/studentAttendanceService";
+import Moment from 'moment';
 
-const { Option } = Select;
+import studentAttendanceService from "../../services/studentAttendanceService";
+const {Option} = Select;
 const {Search} = Input;
 const localizer = momentLocalizer(moment);
-
 
 export default class StuAttendanceManagement extends React.Component {
     constructor(props) {
@@ -27,38 +27,30 @@ export default class StuAttendanceManagement extends React.Component {
             student: null,
             isSearchLoading: false,
             isNewRecord: true,
-            selectedClass:'',
-            selectedDate:''
+            selectedClass: '',
+            selectedDate: ''
         };
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.deleteStudent = this.deleteStudent.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
-        this.loadTable = this.loadTable.bind(this);
         this.loadClassesDropDown = this.loadClassesDropDown.bind(this);
+        this.searchByClassAndDate = this.searchByClassAndDate.bind(this);
+        this.classOnChangeHandler = this.classOnChangeHandler.bind(this);
+        this.dateOnChangeHandler = this.dateOnChangeHandler.bind(this);
     }
 
     columns = [
         {
-            title: "First Name",
-            dataIndex: "first_name",
-            key: "firstName",
-        },
-        {
-            title: "Last Name",
-            dataIndex: "last_name",
-            key: "lastName",
-        },
-        {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Student Name",
+            dataIndex: "student_id",
+            key: "student_id",
         },
         {
             title: "Status",
             render: (text, record) => (
-                record.id % 3 == 0 ? <Tag color="#28a745">Present</Tag> : <Tag color="#ff4d4f">Absent</Tag>
+                record.status  == 'present' ? <Tag color="#28a745">Present</Tag> : <Tag color="#ff4d4f">Absent</Tag>
             ),
         },
         {
@@ -82,14 +74,6 @@ export default class StuAttendanceManagement extends React.Component {
         },
     ];
 
-    loadTable() {
-        studentService.getAllStudents().then(response => {
-            this.setState({
-                data: response.data.data
-            })
-        })
-    }
-
     loadClassesDropDown() {
         classService.getAllClasss().then(response => {
             this.setState({
@@ -100,7 +84,6 @@ export default class StuAttendanceManagement extends React.Component {
 
 
     componentDidMount() {
-        this.loadTable()
         this.loadClassesDropDown()
         this.props.setBreadCrumb("Attendance", "View");
     }
@@ -153,7 +136,7 @@ export default class StuAttendanceManagement extends React.Component {
     handleCancel = (e) => {
         this.setState({
             visible: false,
-            isVisibleEdit:false
+            isVisibleEdit: false
         });
     };
 
@@ -170,11 +153,31 @@ export default class StuAttendanceManagement extends React.Component {
         }
     }
 
-    searchByClassAndDate(){
-        studentAttendanceService
+    searchByClassAndDate() {
+        if (this.state.selectedClass != '' && this.state.selectedClass != undefined && this.state.selectedDate != '' && this.state.selectedDate != undefined) {
+            studentAttendanceService.getAttendanceByClassIdAndDate(this.state.selectedClass, Moment(this.state.selectedDate).format('yyyy-MM-DD')).then(response => {
+                this.setState({
+                    data: response.data.data
+                })
+            })
+        }else{
+            this.openNotificationWithIcon("warning","Warning","Select Class and Date")
+        }
     }
 
-    getClassesDropDown(){
+    classOnChangeHandler(value) {
+        this.setState({
+            selectedClass: value
+        })
+    }
+
+    dateOnChangeHandler(moment, dateString) {
+        this.setState({
+            selectedDate: moment
+        })
+    }
+
+    getClassesDropDown() {
         return (
             <>
                 {this.state.classes.map(cls => {
@@ -189,33 +192,39 @@ export default class StuAttendanceManagement extends React.Component {
     }
 
 
-
     render() {
         return (
             <div className="container-fluid">
 
                 <div className="row">
-                    <div className="col-md-3">
-                        <Search onKeyUp={this.handlerSearch} placeholder="Search By Name"
-                                loading={this.state.isSearchLoading}/>
-                    </div>
                     <div className="col-md-9">
                         <div className='controlsWrapper'>
-                            <Select style={{width:'400px'}} placeholder='Select Class'>
+                            <Select style={{width: '400px'}} placeholder='Select Class'
+                                    onChange={this.classOnChangeHandler}>
                                 {this.state.classes && this.getClassesDropDown()}
                             </Select>
-                            <DatePicker className='ml-2'/>
+                            <DatePicker className='ml-2' onChange={this.dateOnChangeHandler} />
                             <Button
-                                style={{float: "right", marginBottom: "10px", zIndex: '1'}}
+                                style={{marginBottom: "10px", marginLeft:"10px", zIndex: '1'}}
                                 type="primary"
                                 className="success-btn"
-                                onClick={()=>{
-                                    this.showMarkAttendanceModal(true, null)
-                                }}
+                                onClick={this.searchByClassAndDate}
                             >
-                                Mark Attendance
+                                Load
                             </Button>
                         </div>
+                    </div>
+                    <div className="col-md-3">
+                        <Button
+                            style={{float: "right", marginBottom: "10px", zIndex: '1'}}
+                            type="primary"
+                            className="success-btn"
+                            onClick={() => {
+                                this.showMarkAttendanceModal(true, null)
+                            }}
+                        >
+                            Mark Attendance
+                        </Button>
                     </div>
                 </div>
 
@@ -232,7 +241,8 @@ export default class StuAttendanceManagement extends React.Component {
                             footer={[]}
                             width={900}
                         >
-                            <StuMarkAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <StuMarkAttendanceForm student={this.state.student} loadTable={this.loadTable}
+                                                   isNewRecord={this.state.isNewRecord}/>
                         </Modal>
 
                         <Modal
@@ -245,7 +255,8 @@ export default class StuAttendanceManagement extends React.Component {
                             footer={[]}
                             width={500}
                         >
-                            <StuEditAttendanceForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <StuEditAttendanceForm student={this.state.student} loadTable={this.loadTable}
+                                                   isNewRecord={this.state.isNewRecord}/>
                         </Modal>
                     </div>
                 </div>
