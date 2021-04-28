@@ -33,7 +33,7 @@ export default class StuAttendanceManagement extends React.Component {
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-        this.deleteStudent = this.deleteStudent.bind(this);
+        this.deleteAttendance = this.deleteAttendance.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadClassesDropDown = this.loadClassesDropDown.bind(this);
         this.searchByClassAndDate = this.searchByClassAndDate.bind(this);
@@ -97,7 +97,7 @@ export default class StuAttendanceManagement extends React.Component {
         });
     }
 
-    deleteStudent(studentId) {
+    deleteAttendance(attendanceId) {
         Modal.confirm({
             title: 'Delete',
             icon: <ExclamationCircleOutlined/>,
@@ -105,10 +105,10 @@ export default class StuAttendanceManagement extends React.Component {
             okText: 'Yes',
             cancelText: 'No',
             onOk: () => {
-                studentService.deleteStudent(studentId).then(response => {
+                studentAttendanceService.deleteAttendance(attendanceId).then(response => {
                     if (response.data.success) {
                         this.openNotificationWithIcon("success", "Attendance", response.data.msg);
-                        this.loadTable()
+                        this.searchByClassAndDate()
                     }
                 })
             }
@@ -116,7 +116,7 @@ export default class StuAttendanceManagement extends React.Component {
     }
 
     showDeleteConfirmation(studentId) {
-        this.deleteStudent(studentId);
+        this.deleteAttendance(studentId);
     }
 
     showModal(isNewRecord, record) {
