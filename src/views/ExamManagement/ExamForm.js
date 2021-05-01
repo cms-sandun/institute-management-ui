@@ -4,7 +4,6 @@ import TextArea from "antd/lib/input/TextArea";
 import batchService from "../../services/batchService";
 import employeeService from "../../services/employeeService";
 import {TimePicker} from 'antd';
-import moment from 'moment';
 import examService from "../../services/examService";
 
 const format = 'HH:mm';

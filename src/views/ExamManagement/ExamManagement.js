@@ -3,6 +3,7 @@ import ExamForm from "../ExamManagement/ExamForm";
 import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
 import examService from "../../services/examService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -12,7 +13,7 @@ export default class ExamManagement extends React.Component {
         super(props);
 
         this.state = {
-            visible: true,
+            visible: false,
             data: [],
             exam: null,
             isSearchLoading:false,
@@ -28,29 +29,31 @@ export default class ExamManagement extends React.Component {
 
     columns = [
         {
-            title: "ID",
-            dataIndex: "id",
-            key: "id",
-        },
-        {
             title: "Exam Name",
             dataIndex: "exam_name",
             key: "exam_name",
         },
         {
             title: "Batch",
-            dataIndex: "batch_name",
-            key: "batch_name",
+            render:function (text, record) {
+                return record.batch.name
+            }
         },
         {
-            title: "Start At",
-            dataIndex: "start_at",
-            key: "start_at",
+            title: "Exam Date",
+            render:function (text, record) {
+                return moment(record.exam_date).format("YYYY-MM-DD")
+            }
         },
         {
-            title: "End At",
-            dataIndex: "end_at",
-            key: "end_at",
+            title: "Start Time",
+            dataIndex: "start_time",
+            key: "start_time",
+        },
+        {
+            title: "End Time",
+            dataIndex: "end_time",
+            key: "end_time",
         },
         {
             title: "Action",
