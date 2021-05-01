@@ -12,7 +12,7 @@ export default class ExamManagement extends React.Component {
         super(props);
 
         this.state = {
-            visible: false,
+            visible: true,
             data: [],
             exam: null,
             isSearchLoading:false,
@@ -36,6 +36,11 @@ export default class ExamManagement extends React.Component {
             title: "Exam Name",
             dataIndex: "exam_name",
             key: "exam_name",
+        },
+        {
+            title: "Batch",
+            dataIndex: "batch_name",
+            key: "batch_name",
         },
         {
             title: "Start At",
@@ -164,7 +169,7 @@ export default class ExamManagement extends React.Component {
                             }}
                             title="Exam Form"
                             footer={[]}
-                            width={900}
+                            width={500}
                         >
                             <ExamForm exam={this.state.exam} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>

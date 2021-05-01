@@ -1,8 +1,11 @@
 import React from "react";
-import {Form, Input, Upload, Select, Button, notification} from "antd";
-import {InboxOutlined} from "@ant-design/icons";
+import {Form, Input, Upload, Select, Button, notification, DatePicker} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import batchService from "../../services/batchService";
+import employeeService from "../../services/employeeService";
+import { TimePicker } from 'antd';
+import moment from 'moment';
+const format = 'HH:mm';
 
 const {Option} = Select;
 
@@ -11,22 +14,28 @@ export default class ExamForm extends React.Component {
     super(props);
     this.state = {
       batchID: props.batch ? props.batch.id : '',
-      name: props.batch ? props.batch.name : '',
-      studentCount: props.batch ? props.batch.student_count : '',
-      course: props.batch ? props.batch.course_id : '',
-      status: props.batch ? props.batch.status : 'enabled',
-      nameError: "",
-      courseError: "",
-      statusError: ""
+      examName: props.batch ? props.batch.name : '',
+      startAt: props.batch ? props.batch.start_at : '',
+      endAt: props.batch ? props.batch.end_at : '',
+      batchesList: [],
+      selectedBatch: '',
+      batchError: "",
+      examNameError: "",
+      startAtError: "",
+      endAtError: ""
     };
-
-    //console.log(this.props.batch)
 
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
     this.resetErrorLabels = this.resetErrorLabels.bind(this);
     this.setValidationError = this.setValidationError.bind(this);
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
     this.onStatusChangeHandler = this.onStatusChangeHandler.bind(this);
+    this.getBatchesArray = this.getBatchesArray.bind(this);
+    this.onBatchChangeHandler = this.onBatchChangeHandler.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadBatches()
   }
 
   resetErrorLabels() {
@@ -108,56 +117,68 @@ export default class ExamForm extends React.Component {
 
   }
 
+  loadBatches(){
+    batchService.getAllBatches().then(
+        response => {
+          this.setState({
+            batchesList: response.data.data
+          })
+        }
+    )
+  }
+
+  getBatchesArray(){
+    return (
+        <>
+          {this.state.batchesList.length >0 && this.state.batchesList.map(batch => {
+            return (
+                <Option key={batch.id} value={batch.id}>{batch.name}</Option>
+            )
+          })}
+        </>
+    )
+  }
+
+  onBatchChangeHandler(value) {
+    this.setState({
+      selectedBatch: value,
+    });
+  }
+
   render() {
     return (
         <form>
           <div className='row'>
             <div className='col-md-12'>
               <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="name"
-                    value={this.state.name}
-                    placeholder='Batch Name'
-                />
-                <label className="error-label">
-                  {this.state.nameError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <Input
-                    onChange={this.onInputFieldChangeHandler}
-                    name="courseFee"
-                    value={this.state.courseFee}
-                    placeholder='Course Fee'
-                />
-                <label className="error-label">
-                  {this.state.courseFeeError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
-                <TextArea
-                    onChange={this.onInputFieldChangeHandler}
-                    name="description"
-                    value={this.state.description}
-                    placeholder='Description'
-                />
-                <label className="error-label">
-                  {this.state.descriptionError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
                 <Select
-                    defaultValue={this.state.status}
-                    onChange={this.onStatusChangeHandler}
-                    name="status"
+                    placeholder="Select Batch"
+                    name="batch" onChange={this.onBatchChangeHandler}
+
                 >
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
+                  {this.getBatchesArray()}
                 </Select>
+                <label className="error-label">
+                  {this.state.batchError}
+                </label>
+              </Form.Item>
+
+              <Form.Item>
+                <Input
+                    onChange={this.onInputFieldChangeHandler}
+                    name="examName"
+                    value={this.state.examName}
+                    placeholder='Exam Name'
+                />
+                <label className="error-label">
+                  {this.state.examNameError}
+                </label>
+              </Form.Item>
+
+              <Form.Item>
+                <DatePicker placeholder="Exam Date" onChange={this.dateOnChangeHandler} />
+                <TimePicker className='ml-5' defaultValue={moment('12:00', format)} format={format} />
+                <TimePicker className='ml-2' defaultValue={moment('13:00', format)} format={format} />
               </Form.Item>
 
               <Form.Item style={{textAlign: "right"}}>

@@ -17,7 +17,7 @@ export default class UserForm extends React.Component {
             userName: props.student ? props.student.first_name : '',
             password: props.student ? props.student.last_name : '',
             role: props.student ? props.student.middle_name : '',
-            employeeList:'',
+            employeeList:[],
             employeeError: "",
             userNameError: "",
             passwordError: "",
