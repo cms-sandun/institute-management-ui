@@ -3,6 +3,7 @@ import { API } from '../config';
 
 class StudentService {
 
+  //js axio lib use to call http req
   async saveStudent(student) {
     return await axios.post(`${API.students}`, student)
   }

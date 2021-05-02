@@ -28,7 +28,7 @@ export default class StudentManagement extends React.Component {
 
     columns = [
         {
-            title: "",
+            title: "Profile",
             render: (text, record) => (
                 <div>
                     <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.jpeg"}/>
@@ -37,8 +37,8 @@ export default class StudentManagement extends React.Component {
         },
         {
             title: "First Name",
-            dataIndex: "first_name",
-            key: "firstName",
+            dataIndex: "first_name", //db column
+            key: "firstName", //unique key for column
         },
         {
             title: "Middle Name",
@@ -89,6 +89,7 @@ export default class StudentManagement extends React.Component {
         })
     }
 
+    //after click student from menu // react function
     componentDidMount() {
         this.loadTable();
         this.props.setBreadCrumb("Students", "View");
@@ -139,6 +140,7 @@ export default class StudentManagement extends React.Component {
         });
     };
 
+    //capture event object (e)
     handlerSearch = (e) => {
       if(e.key == "Enter"){
           this.setState({isSearchLoading:true})
@@ -152,6 +154,7 @@ export default class StudentManagement extends React.Component {
       }
     }
 
+    //html part/view
     render() {
         return (
             <div className="container-fluid">
@@ -188,7 +191,7 @@ export default class StudentManagement extends React.Component {
                             footer={[]}
                             width={900}
                         >
-                            <StudentForm student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <StudentForm  student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>

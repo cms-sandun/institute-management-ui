@@ -23,6 +23,7 @@ import Login from "./Login";
 import UserManagement from "../UserManagement/UserManagement";
 import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
 import StuAttendanceManagement from "../StuAttendanceManagement/StuAttendanceManagement";
+import ClassManagement from "../ClassManagement/ClassManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -96,7 +97,7 @@ export default class Dashboard extends React.Component {
             <Link to='/'>Branches</Link>
             </Menu.Item>
             <Menu.Item key="7" icon={<BookOutlined />}>
-            <Link to='/'>Classes</Link>
+            <Link to='/classes'>Classes</Link>
             </Menu.Item>
             <Menu.Item key="8" icon={<PaperClipOutlined />}>
               <Link to="/exams">Exams</Link>
@@ -168,6 +169,9 @@ export default class Dashboard extends React.Component {
               )} />
               <Route path="/users" exact render={(props) => (
                   <UserManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/classes" exact render={(props) => (
+                  <ClassManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
               )} />
             </div>
           </Content>

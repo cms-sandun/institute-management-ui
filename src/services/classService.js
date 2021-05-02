@@ -11,7 +11,7 @@ class ClassService {
     return await axios.put(`${API.classes}/${id}`, cls)
   }
 
-  async getAllClasss() {
+  async getAllClass() {
     return await axios.get(`${API.classes}`)
   }
 
