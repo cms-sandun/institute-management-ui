@@ -77,7 +77,7 @@ export default class StuAttendanceManagement extends React.Component {
     ];
 
     loadClassesDropDown() {
-        classService.getAllClasss().then(response => {
+        classService.getAllClass().then(response => {
             this.setState({
                 classes: response.data.data
             })
