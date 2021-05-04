@@ -24,6 +24,7 @@ import UserManagement from "../UserManagement/UserManagement";
 import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
 import StuAttendanceManagement from "../StuAttendanceManagement/StuAttendanceManagement";
 import ClassManagement from "../ClassManagement/ClassManagement";
+import ExamEnrollSuccessPage from "../ExamEnrollementSuccessPage/ExamEnrollSuccessPage";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;

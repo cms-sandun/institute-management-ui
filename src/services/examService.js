@@ -23,6 +23,10 @@ class ExamService {
     return await axios.delete(`${API.exams}/`+examId)
   }
 
+  async enrollToExam(studentId, examId) {
+    return await axios.get(`${API.exams}/enroll?stu_id=`+studentId+'&exam_id='+examId)
+  }
+
 }
 
 const examService = new ExamService();
