@@ -2,7 +2,7 @@ import React from "react";
 import ExamForm from "../ExamManagement/ExamForm";
 import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
 import examService from "../../services/examService";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, BellOutlined} from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, BellOutlined, UserOutlined} from '@ant-design/icons';
 import moment from 'moment';
 
 const {confirm} = Modal;
@@ -71,10 +71,20 @@ export default class ExamManagement extends React.Component {
                     }}>
                     </Button>
 
-                    <Button title='Notify Batch' icon={<BellOutlined />} onClick={(e) => {
+                    <Button title='Notify Batch' className='mr-2' icon={<BellOutlined />} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
                     </Button>
+
+
+                    <Button title='View Enrolled Students' icon={<UserOutlined />} onClick={(e) => {
+                        this.showDeleteConfirmation(record.id)
+                    }}>
+                    </Button>
+
+
+
+
                 </div>
             ),
         },
