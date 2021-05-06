@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Input, Upload, Select, Button, notification, DatePicker} from "antd";
+import {Form, Input, Upload, Select, Button, notification, DatePicker, TimePicker} from "antd";
 import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 
@@ -7,15 +7,18 @@ import moment from "moment";
 import classService from "../../services/classService";
 
 const {Option} = Select;
+const format = 'HH:mm';
 
 export default class ClassForm extends React.Component {
     constructor(props) {
         super(props);
+
+        console.log(props);
         this.state = {
             classId: props.class ? props.class.id : '',
             name: props.class ? props.class.name : '',
             teacherId: props.class ? props.class.teacher_id : '',
-            day: props.class ? props.class.day : '',
+            day: props.class ? props.class.day : 'Sunday',
             startAt: props.class ? props.class.start_at : '',
             endAt: props.class ? props.class.end_at : '',
             status: props.class ? props.class.status : 'enabled',
@@ -34,6 +37,9 @@ export default class ClassForm extends React.Component {
         this.setValidationError = this.setValidationError.bind(this);
         this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
         this.onStatusChangeHandler = this.onStatusChangeHandler.bind(this);
+        this.onStartTimeChangeHandler = this.onStartTimeChangeHandler.bind(this);
+        this.onEndTimeChangeHandler = this.onEndTimeChangeHandler.bind(this);
+        this.onDateChangeHandler = this.onDateChangeHandler.bind(this);
     }
 
     resetErrorLabels() {
@@ -73,11 +79,26 @@ export default class ClassForm extends React.Component {
             status: value,
         });
     }
+    onDateChangeHandler(value) {
+        this.setState({
+            day: value,
+        });
+    }
 
     setValidationError(errorField, errorMsg) {
         this.setState({
             [errorField]: errorMsg
         });
+    }
+    onStartTimeChangeHandler(moment, dateString) {
+        this.setState({
+            startAt: dateString
+        })
+    }
+    onEndTimeChangeHandler(moment, dateString) {
+        this.setState({
+            endAt: dateString
+        })
     }
 
     async onSubmitHandler(event) {
@@ -128,12 +149,12 @@ export default class ClassForm extends React.Component {
         }
 
         if (response.data.success) {
-            this.openNotificationWithIcon("success", "Student", response.data.msg);
+            this.openNotificationWithIcon("success", "Class", response.data.msg);
             this.resetErrorLabels();
             this.resetFields();
             this.props.loadTable();
         }else{
-            this.openNotificationWithIcon("error", "Student", response.data.msg);
+            this.openNotificationWithIcon("error", "Class", response.data.msg);
         }
     }
 
@@ -155,40 +176,47 @@ export default class ClassForm extends React.Component {
                         </Form.Item>
 
                         <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
+                            <Select
+                                onChange={this.onDateChangeHandler}
                                 name="day"
                                 value={this.state.day}
                                 placeholder='Class Date'
-                            />
+                            >
+                                <Option value="sunday">Sunday</Option>
+                                <Option value="monday">Monday</Option>
+                                <Option value="tuesday">Tuesday</Option>
+                                <Option value="wednesday">Wednesday</Option>
+                                <Option value="thursday">Thursday</Option>
+                                <Option value="friday">Friday</Option>
+                                <Option value="saturday">Saturday</Option>
+                            </Select>
                             <label className="error-label">
-                                {this.state.nameError}
+                                {this.state.dayError}
                             </label>
                         </Form.Item>
 
-                        <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
-                                name="startAt"
-                                value={this.state.startAt}
-                                placeholder='Start time'
-                            />
+                        <div className='row'>
+                        <div className='col-md-6'>
+                    <Form.Item>
+                            <TimePicker def className='time-picker' format={format}
+                                        onChange={this.onStartTimeChangeHandler}
+                                        placeholder='Start time'/>
                             <label className="error-label">
                                 {this.state.startAtError}
                             </label>
                         </Form.Item>
-
-                        <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
-                                name="endAt"
-                                value={this.state.endAt}
-                                placeholder='End time'
-                            />
-                            <label className="error-label">
-                                {this.state.endAtError}
-                            </label>
-                        </Form.Item>
+                        </div>
+                            <div className='col-md-6'>
+                                <Form.Item>
+                                    <TimePicker className='time-picker' format={format}
+                                                onChange={this.onEndTimeChangeHandler}
+                                                placeholder='End time'/>
+                                    <label className="error-label">
+                                        {this.state.endAtError}
+                                    </label>
+                                </Form.Item>
+                            </div>
+                        </div>
 
                         <Form.Item>
                             <Select

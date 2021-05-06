@@ -11,4 +11,5 @@ export const API = {
   exams: `${API_PATH}/exams`,
   users: `${API_PATH}/users`,
   classes: `${API_PATH}/classes`,
+  payments: `${API_PATH}/payments`,
 };

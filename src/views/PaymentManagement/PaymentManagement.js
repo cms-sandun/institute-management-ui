@@ -1,72 +1,62 @@
 import React from "react";
-import StudentForm from "./StudentForm";
+import StudentForm from "./PaymentForm";
 import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
-import studentService from "../../services/studentService";
+import paymentService from "../../services/paymentService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import PaymentForm from "./PaymentForm";
+import moment from 'moment'
 
 const {confirm} = Modal;
 const {Search} = Input;
 
-export default class StudentManagement extends React.Component {
+export default class PaymentManagement extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             visible: false,
             data: [],
-            student: null,
+            payment: null,
             isSearchLoading:false,
             isNewRecord:true
         };
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-        this.deleteStudent = this.deleteStudent.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
     }
 
     columns = [
+
         {
-            title: "Profile",
-            render: (text, record) => (
-                <div>
-                    <img style={{maxWidth:'50px'}} className='img-fluid' src={window.location.origin+"/profile_pic.jpeg"}/>
-                </div>
-            ),
-        },
-        {
-            title: "First Name",
-            dataIndex: "first_name", //db column
+            title: "Student Name",
+            render: (text, record) => {
+              return `${record.student.first_name} ${record.student.last_name}`
+            },
             key: "firstName", //unique key for column
         },
         {
-            title: "Middle Name",
-            dataIndex: "middle_name",
-            key: "middleName",
+            title: "Paid Amount",
+            dataIndex: "paid_amount",
+            key: "paidAmount",
         },
         {
-            title: "Last Name",
-            dataIndex: "last_name",
-            key: "lastName",
+            title: "Remaining Amount",
+            dataIndex: "remaining_amount",
+            key: "remainingAmount",
         },
         {
-            title: "Full Name",
-            render: (text,record) => {
-                console.log(record)
-                return record.first_name +" " +record.last_name
+            title: "Date",
+            render : (text, record) => {
+              return moment(record.date).format("YYYY-MM-DD")
             },
-            key: "fullName",
+            key: "date",
         },
         {
-            title: "Contact No",
-            dataIndex: "contact_no",
-            key: "contact",
-        },
-        {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Payment Method",
+            dataIndex: "payment_method",
+            key: "paymentMethod",
         },
         {
             title: "Action",
@@ -90,7 +80,7 @@ export default class StudentManagement extends React.Component {
     ];
 
     loadTable() {
-        studentService.getAllStudents().then(response => {
+        paymentService.getAllPayments().then(response => {
             this.setState({
                 data: response.data.data
             })
@@ -100,7 +90,7 @@ export default class StudentManagement extends React.Component {
     //after click student from menu // react function
     componentDidMount() {
         this.loadTable();
-        this.props.setBreadCrumb("Students", "View");
+        this.props.setBreadCrumb("Payments", "View");
     }
 
     openNotificationWithIcon(type, title, msg) {
@@ -110,25 +100,25 @@ export default class StudentManagement extends React.Component {
         });
     }
 
-    deleteStudent(studentId) {
-        Modal.confirm({
-            title: 'Delete',
-            icon: <ExclamationCircleOutlined />,
-            content: 'Do you want to delete?',
-            okText: 'Yes',
-            cancelText: 'No',
-            onOk: () => {
-                studentService.deleteStudent(studentId).then(response => {
-                    if (response.data.success) {
-                        this.openNotificationWithIcon("success", "Student", response.data.msg);
-                        this.loadTable();
-                    }else{
-                        this.openNotificationWithIcon("error", "Student", response.data.msg);
-                    }
-                })
-            }
-        });
-    }
+    // deleteStudent(studentId) {
+    //     Modal.confirm({
+    //         title: 'Delete',
+    //         icon: <ExclamationCircleOutlined />,
+    //         content: 'Do you want to delete?',
+    //         okText: 'Yes',
+    //         cancelText: 'No',
+    //         onOk: () => {
+    //             studentService.deleteStudent(studentId).then(response => {
+    //                 if (response.data.success) {
+    //                     this.openNotificationWithIcon("success", "Student", response.data.msg);
+    //                     this.loadTable();
+    //                 }else{
+    //                     this.openNotificationWithIcon("error", "Student", response.data.msg);
+    //                 }
+    //             })
+    //         }
+    //     });
+    // }
 
     showDeleteConfirmation(studentId) {
         this.deleteStudent(studentId);
@@ -136,7 +126,7 @@ export default class StudentManagement extends React.Component {
 
     showModal(isNewRecord, record) {
         this.setState({
-            student: record,
+            payment: record,
             visible: true,
             isNewRecord : isNewRecord
         });
@@ -149,18 +139,18 @@ export default class StudentManagement extends React.Component {
     };
 
     //capture event object (e)
-    handlerSearch = (e) => {
-      if(e.key == "Enter"){
-          this.setState({isSearchLoading:true})
-          let searchText = e.target.value;
-          studentService.searchStudents(searchText).then(response => {
-              this.setState({
-                  data: response.data.data,
-                  isSearchLoading:false
-              })
-          })
-      }
-    }
+    // handlerSearch = (e) => {
+    //     if(e.key == "Enter"){
+    //         this.setState({isSearchLoading:true})
+    //         let searchText = e.target.value;
+    //         studentService.searchStudents(searchText).then(response => {
+    //             this.setState({
+    //                 data: response.data.data,
+    //                 isSearchLoading:false
+    //             })
+    //         })
+    //     }
+    // }
 
     //html part/view
     render() {
@@ -195,11 +185,11 @@ export default class StudentManagement extends React.Component {
                             onCancel={(e) => {
                                 this.handleCancel(e)
                             }}
-                            title="Student Form"
+                            title="Payment Form"
                             footer={[]}
                             width={900}
                         >
-                            <StudentForm  student={this.state.student} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                            <PaymentForm  payment={this.state.payment} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>
                     </div>
                 </div>

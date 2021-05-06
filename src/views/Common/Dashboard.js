@@ -25,6 +25,7 @@ import EmployeeManagement from "../EmployeeManagement/EmployeeManagement";
 import StuAttendanceManagement from "../StuAttendanceManagement/StuAttendanceManagement";
 import ClassManagement from "../ClassManagement/ClassManagement";
 import ExamEnrollSuccessPage from "../ExamEnrollementSuccessPage/ExamEnrollSuccessPage";
+import PaymentManagement from "../PaymentManagement/PaymentManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -107,7 +108,7 @@ export default class Dashboard extends React.Component {
             <Link to='/calendar'>Calendar</Link>
             </Menu.Item>
             <Menu.Item key="10" icon={<DollarCircleOutlined />}>
-            <Link to='/'>Payments</Link>
+            <Link to='/payments'>Payments</Link>
             </Menu.Item>
             <Menu.Item key="11" icon={<BarChartOutlined />}>
             <Link to='/attendance'>Stu. Attendance</Link>
@@ -173,6 +174,9 @@ export default class Dashboard extends React.Component {
               )} />
               <Route path="/classes" exact render={(props) => (
                   <ClassManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )} />
+              <Route path="/payments" exact render={(props) => (
+                  <PaymentManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
               )} />
             </div>
           </Content>

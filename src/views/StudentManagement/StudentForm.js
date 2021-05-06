@@ -300,6 +300,7 @@ export default class StudentForm extends React.Component {
                 </label>
               </Form.Item>
 
+
               <Form.Item style={{textAlign: "right"}}>
                 <Button
                     className="form-button submit-button"
