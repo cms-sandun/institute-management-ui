@@ -27,6 +27,14 @@ class ExamService {
     return await axios.get(`${API.exams}/enroll?stu_id=`+studentId+'&exam_id='+examId)
   }
 
+  async notifyBatch(payload) {
+    return await axios.post(`${API.exams}/notify`,payload)
+  }
+
+  async getEnrolledStudents(exam_id) {
+    return await axios.get(`${API.exams}/export/enrolled_students?exam_id=`+exam_id)
+  }
+
 }
 
 const examService = new ExamService();

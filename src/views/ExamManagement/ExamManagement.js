@@ -1,6 +1,6 @@
 import React from "react";
 import ExamForm from "../ExamManagement/ExamForm";
-import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
+import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import examService from "../../services/examService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, BellOutlined, UserOutlined} from '@ant-design/icons';
 import moment from 'moment';
@@ -22,9 +22,10 @@ export default class ExamManagement extends React.Component {
 
         this.showModal = this.showModal.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-        this.deleteExam = this.deleteExam.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
+        this.notifyBatch = this.notifyBatch.bind(this);
+        this.exportEnrolledStudents = this.exportEnrolledStudents.bind(this);
     }
 
     columns = [
@@ -72,13 +73,13 @@ export default class ExamManagement extends React.Component {
                     </Button>
 
                     <Button title='Notify Batch' className='mr-2' icon={<BellOutlined />} onClick={(e) => {
-                        this.showDeleteConfirmation(record.id)
+                        this.notifyBatch(record.id)
                     }}>
                     </Button>
 
 
                     <Button title='View Enrolled Students' icon={<UserOutlined />} onClick={(e) => {
-                        this.showDeleteConfirmation(record.id)
+                        this.exportEnrolledStudents(record.id)
                     }}>
                     </Button>
 
@@ -104,7 +105,7 @@ export default class ExamManagement extends React.Component {
         this.props.setBreadCrumb("Exams", "View");
     }
 
-    deleteExam(examId) {
+    showDeleteConfirmation(examId) {
         Modal.confirm({
             title: 'Delete',
             icon: <ExclamationCircleOutlined />,
@@ -121,8 +122,34 @@ export default class ExamManagement extends React.Component {
         });
     }
 
-    showDeleteConfirmation(examId) {
-        this.deleteExam(examId);
+    notifyBatch(exam_id) {
+        Modal.confirm({
+            title: 'Notify',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Do you want to notify the batch?',
+            okText: 'Yes',
+            cancelText: 'No',
+            onOk: () => {
+
+                const payload = {
+                    exam_id : exam_id
+                }
+
+                examService.notifyBatch(payload).then(response => {
+                    if (response.data.success) {
+                        this.openNotificationWithIcon("success", "Exam", response.data.msg);
+                    }
+                })
+            }
+        });
+    }
+
+    exportEnrolledStudents(examId){
+        examService.getEnrolledStudents(examId).then(response => {
+            if (response.data.success) {
+                window.open("http://localhost:5000/"+response.data.data,'blank')
+            }
+        })
     }
 
     showModal(isNewRecord, record) {
@@ -150,6 +177,13 @@ export default class ExamManagement extends React.Component {
               })
           })
       }
+    }
+
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
     }
 
     render() {
