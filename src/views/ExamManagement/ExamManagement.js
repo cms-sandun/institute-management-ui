@@ -1,8 +1,9 @@
 import React from "react";
 import ExamForm from "../ExamManagement/ExamForm";
+import ExamResultsForm from "../ExamManagement/ExamResultsForm";
 import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import examService from "../../services/examService";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, BellOutlined, UserOutlined} from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, BellOutlined, UserOutlined, PaperClipOutlined} from '@ant-design/icons';
 import moment from 'moment';
 
 const {confirm} = Modal;
@@ -14,18 +15,21 @@ export default class ExamManagement extends React.Component {
 
         this.state = {
             visible: false,
+            examResultsVisible: false,
             data: [],
             exam: null,
             isSearchLoading:false,
             isNewRecord:true
         };
 
-        this.showModal = this.showModal.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
+        this.showAddNewExamModal = this.showAddNewExamModal.bind(this);
+        this.handleAddNewExamFormCancel = this.handleAddNewExamFormCancel.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
         this.notifyBatch = this.notifyBatch.bind(this);
         this.exportEnrolledStudents = this.exportEnrolledStudents.bind(this);
+        this.showExamResultsModal = this.showExamResultsModal.bind(this);
+        this.handleExamResultsFormCancel = this.handleExamResultsFormCancel.bind(this);
     }
 
     columns = [
@@ -62,7 +66,7 @@ export default class ExamManagement extends React.Component {
             render: (text, record) => (
                 <div>
                     <Button title='Edit' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
-                        this.showModal(false, record)
+                        this.showAddNewExamModal(false, record)
                     }}>
                     </Button>
 
@@ -78,8 +82,13 @@ export default class ExamManagement extends React.Component {
                     </Button>
 
 
-                    <Button title='View Enrolled Students' icon={<UserOutlined />} onClick={(e) => {
+                    <Button title='View Enrolled Students' className='mr-2' icon={<UserOutlined />} onClick={(e) => {
                         this.exportEnrolledStudents(record.id)
+                    }}>
+                    </Button>
+
+                    <Button title='Results' icon={<PaperClipOutlined />} onClick={(e) => {
+                        this.showExamResultsModal(record)
                     }}>
                     </Button>
 
@@ -151,8 +160,15 @@ export default class ExamManagement extends React.Component {
             }
         })
     }
+    
+    showExamResultsModal(record){
+        this.setState({
+            examResultsVisible: true,
+            exam: record
+        });
+    }
 
-    showModal(isNewRecord, record) {
+    showAddNewExamModal(isNewRecord, record) {
         this.setState({
             exam: record,
             visible: true,
@@ -160,9 +176,15 @@ export default class ExamManagement extends React.Component {
         });
     }
 
-    handleCancel = (e) => {
+    handleAddNewExamFormCancel = (e) => {
         this.setState({
             visible: false
+        });
+    };
+
+    handleExamResultsFormCancel = (e) => {
+        this.setState({
+            examResultsVisible: false
         });
     };
 
@@ -201,7 +223,7 @@ export default class ExamManagement extends React.Component {
                             type="primary"
                             className="success-btn"
                             onClick={()=>{
-                                this.showModal(true, null)
+                                this.showAddNewExamModal(true, null)
                             }}
                         >
                             Add New
@@ -216,13 +238,25 @@ export default class ExamManagement extends React.Component {
                             destroyOnClose={true}
                             visible={this.state.visible}
                             onCancel={(e) => {
-                                this.handleCancel(e)
+                                this.handleAddNewExamFormCancel(e)
                             }}
                             title="Exam Form"
                             footer={[]}
                             width={500}
                         >
                             <ExamForm exam={this.state.exam} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                        </Modal>
+                        <Modal
+                            destroyOnClose={true}
+                            visible={this.state.examResultsVisible}
+                            onCancel={(e) => {
+                                this.handleExamResultsFormCancel(e)
+                            }}
+                            title="Exam Results Form"
+                            footer={[]}
+                            width={500}
+                        >
+                            <ExamResultsForm exam={this.state.exam} />
                         </Modal>
                     </div>
                 </div>
