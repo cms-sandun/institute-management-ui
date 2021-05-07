@@ -35,6 +35,10 @@ class ExamService {
     return await axios.get(`${API.exams}/export/enrolled_students?exam_id=`+exam_id)
   }
 
+  async getEnrolledStudentsList(exam_id) {
+    return await axios.get(`${API.exams}/enrolled_students?exam_id=`+exam_id)
+  }
+
   async getResults(exam_id) {
     return await axios.get(`${API.exams}/results?exam_id=`+exam_id)
   }

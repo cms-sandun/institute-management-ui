@@ -48,6 +48,12 @@ export default class ExamResultsForm extends React.Component {
 
     componentDidMount() {
         this.loadResultsTable(this.state.exam_id)
+        examService.getEnrolledStudentsList(this.state.exam_id).then(response => {
+            console.log(response.data)
+            this.setState({
+                enrolledStudentList : response.data.data
+            })
+        })
     }
 
 
@@ -58,17 +64,29 @@ export default class ExamResultsForm extends React.Component {
         });
     }
 
-    /*getStudentsArray() {
+    getEnrolledStudentsList() {
         return (
             <>
-                {this.state.batchesList.length > 0 && this.state.batchesList.map(batch => {
+                {this.state.enrolledStudentList.length > 0 && this.state.enrolledStudentList.map(student => {
                     return (
-                        <Option key={batch.id} value={batch.id}>{batch.name}</Option>
+                        <Option key={student.id} value={student.id}>{student.first_name}</Option>
                     )
                 })}
             </>
         )
-    }*/
+    }
+
+    getGradesList() {
+        return (
+            <>
+                <Option key={1} value="A">A</Option>
+                <Option key={2} value="B">B</Option>
+                <Option key={3} value="C">C</Option>
+                <Option key={4} value="D">D</Option>
+                <Option key={5} value="F">F</Option>
+            </>
+        )
+    }
 
 
     render() {
@@ -77,12 +95,13 @@ export default class ExamResultsForm extends React.Component {
                 <div className='row'>
                     <div className='col-md-7'>
                         <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
-                                name="examName"
-                                value={this.state.examName}
-                                placeholder='Exam Name'
-                            />
+                            <Select
+                                placeholder="Select Student"
+                                name="student" onChange={this.onEmployeeChangeHandler}
+
+                            >
+                                {this.getEnrolledStudentsList()}
+                            </Select>
                             <label className="error-label">
                                 {this.state.examNameError}
                             </label>
@@ -90,12 +109,13 @@ export default class ExamResultsForm extends React.Component {
                     </div>
                     <div className='col-md-3'>
                         <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
-                                name="examName"
-                                value={this.state.examName}
-                                placeholder='Exam Name'
-                            />
+                            <Select
+                                placeholder="Select Grade"
+                                name="student" onChange={this.onEmployeeChangeHandler}
+
+                            >
+                                {this.getGradesList()}
+                            </Select>
                             <label className="error-label">
                                 {this.state.examNameError}
                             </label>
