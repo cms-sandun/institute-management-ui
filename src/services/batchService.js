@@ -23,6 +23,14 @@ class BatchService {
     return await axios.delete(`${API.batches}/`+batchId)
   }
 
+  async addAssociateStudent(payload) {
+    return await axios.post(`${API.batches}/associate_students`,payload)
+  }
+
+  async getAssociateStudent(batchId) {
+    return await axios.get(`${API.batches}/associate_students?batch_id=`+batchId)
+  }
+
 }
 
 const batchService = new BatchService();

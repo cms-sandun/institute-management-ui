@@ -2,7 +2,8 @@ import React from "react";
 import BatchForm from "../BatchManagement/BatchForm";
 import {Table, Space, Button, Modal, Popconfirm, Input} from "antd";
 import batchService from "../../services/batchService";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined,UserOutlined } from '@ant-design/icons';
+import AssociateStudentsForm from "./AssociateStudentsForm";
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -13,8 +14,9 @@ export default class BatchManagement extends React.Component {
 
         this.state = {
             visible: false,
+            visibleAssociateStudentsForm: false,
             data: [],
-            batch: null,
+            batch: '',
             isSearchLoading:false,
             isNewRecord:true
         };
@@ -24,6 +26,8 @@ export default class BatchManagement extends React.Component {
         this.deleteBatch = this.deleteBatch.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
+        this.handleCancelAssociateStudentsForm = this.handleCancelAssociateStudentsForm.bind(this);
+        this.showAssociateStudentsModal = this.showAssociateStudentsModal.bind(this);
     }
 
     columns = [
@@ -52,14 +56,20 @@ export default class BatchManagement extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button type='primary' className='mr-2' icon={<EditOutlined />} onClick={(e) => {
+                    <Button title="Update" className='mr-2' icon={<EditOutlined />} onClick={(e) => {
                         this.showModal(false, record)
                     }}>
                     </Button>
 
 
-                    <Button type='danger' icon={<DeleteOutlined />} onClick={(e) => {
+                    <Button title="Delete" className='mr-2' icon={<DeleteOutlined />} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
+                    }}>
+
+                    </Button>
+
+                    <Button title="Associate Students" icon={<UserOutlined />} onClick={(e) => {
+                        this.showAssociateStudentsModal(record)
                     }}>
 
                     </Button>
@@ -111,9 +121,22 @@ export default class BatchManagement extends React.Component {
         });
     }
 
+    showAssociateStudentsModal(record) {
+        this.setState({
+            batch: record,
+            visibleAssociateStudentsForm: true
+        });
+    }
+
     handleCancel = (e) => {
         this.setState({
             visible: false
+        });
+    };
+
+    handleCancelAssociateStudentsForm = (e) => {
+        this.setState({
+            visibleAssociateStudentsForm: false
         });
     };
 
@@ -167,6 +190,18 @@ export default class BatchManagement extends React.Component {
                             width={900}
                         >
                             <BatchForm batch={this.state.batch} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
+                        </Modal>
+                        <Modal
+                            destroyOnClose={true}
+                            visible={this.state.visibleAssociateStudentsForm}
+                            onCancel={(e) => {
+                                this.handleCancelAssociateStudentsForm(e)
+                            }}
+                            title="Associate Students"
+                            footer={[]}
+                            width={600}
+                        >
+                            <AssociateStudentsForm batch={this.state.batch} />
                         </Modal>
                     </div>
                 </div>
