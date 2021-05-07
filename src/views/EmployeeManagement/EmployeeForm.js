@@ -167,6 +167,7 @@ export default class EmployeeForm extends React.Component {
     //   type: this.state.type,
     // }
 
+    //way of sending as form data, unless images cannot upload
     const payload = new FormData();
     payload.append('branchId',1)
     payload.append('profile_image',this.state.profileImage)
@@ -334,6 +335,7 @@ export default class EmployeeForm extends React.Component {
                 <TextArea
                     name="qualifications"
                     value={this.state.qualifications}
+                    onChange={this.onInputFieldChangeHandler}
                     placeholder='Qualifications'
                 />
                 <label className="error-label">

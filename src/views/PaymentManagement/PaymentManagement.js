@@ -5,6 +5,9 @@ import paymentService from "../../services/paymentService";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import PaymentForm from "./PaymentForm";
 import moment from 'moment'
+import classService from "../../services/classService";
+import studentService from "../../services/studentService";
+
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -16,6 +19,7 @@ export default class PaymentManagement extends React.Component {
         this.state = {
             visible: false,
             data: [],
+            students: [],
             payment: null,
             isSearchLoading:false,
             isNewRecord:true
@@ -25,6 +29,7 @@ export default class PaymentManagement extends React.Component {
         this.handleCancel = this.handleCancel.bind(this);
         this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
         this.loadTable = this.loadTable.bind(this);
+        this.loadStudentDropDown = this.loadStudentDropDown.bind(this);
     }
 
     columns = [
@@ -100,26 +105,6 @@ export default class PaymentManagement extends React.Component {
         });
     }
 
-    // deleteStudent(studentId) {
-    //     Modal.confirm({
-    //         title: 'Delete',
-    //         icon: <ExclamationCircleOutlined />,
-    //         content: 'Do you want to delete?',
-    //         okText: 'Yes',
-    //         cancelText: 'No',
-    //         onOk: () => {
-    //             studentService.deleteStudent(studentId).then(response => {
-    //                 if (response.data.success) {
-    //                     this.openNotificationWithIcon("success", "Student", response.data.msg);
-    //                     this.loadTable();
-    //                 }else{
-    //                     this.openNotificationWithIcon("error", "Student", response.data.msg);
-    //                 }
-    //             })
-    //         }
-    //     });
-    // }
-
     showDeleteConfirmation(studentId) {
         this.deleteStudent(studentId);
     }
@@ -137,6 +122,15 @@ export default class PaymentManagement extends React.Component {
             visible: false
         });
     };
+
+
+    loadStudentDropDown() {
+        studentService.getAllStudents().then(response => {
+            this.setState({
+                students: response.data.data
+            })
+        })
+    }
 
     //capture event object (e)
     // handlerSearch = (e) => {
@@ -169,6 +163,7 @@ export default class PaymentManagement extends React.Component {
                             className="success-btn"
                             onClick={()=>{
                                 this.showModal(true, null)
+                                this.loadStudentDropDown()
                             }}
                         >
                             Add New
@@ -187,7 +182,7 @@ export default class PaymentManagement extends React.Component {
                             }}
                             title="Payment Form"
                             footer={[]}
-                            width={900}
+                            width={800}
                         >
                             <PaymentForm  payment={this.state.payment} loadTable={this.loadTable} isNewRecord={this.state.isNewRecord} />
                         </Modal>

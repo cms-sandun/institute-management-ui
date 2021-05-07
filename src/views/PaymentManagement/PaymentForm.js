@@ -10,6 +10,7 @@ const {Option} = Select;
 export default class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props)
         this.state = {
             paymentID: props.payment ? props.payment.id : '',
             studentName: props.payment ? props.payment.first_name : '',

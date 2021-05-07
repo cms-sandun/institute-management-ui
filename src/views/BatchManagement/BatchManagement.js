@@ -43,9 +43,9 @@ export default class BatchManagement extends React.Component {
             key: "course_id",
         },
         {
-            title: "Status",
-            dataIndex: "status",
-            key: "status",
+            title: "Description",
+            dataIndex: "description",
+            key: "description",
         },
         {
             title: "Action",
