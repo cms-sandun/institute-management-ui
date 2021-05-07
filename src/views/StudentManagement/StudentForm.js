@@ -19,6 +19,7 @@ export default class StudentForm extends React.Component {
       contactNo: props.student ? props.student.contact_no : '',
       dob: props.student ? props.student.dob : '',
       email: props.student ? props.student.email : '',
+      profileImage:'',
       firstNameError: "",
       middleNameError: "",
       lastNameError: "",
@@ -36,6 +37,7 @@ export default class StudentForm extends React.Component {
     this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
     this.onGenderChangeHandler = this.onGenderChangeHandler.bind(this);
     this.onDOBChangeHandler = this.onDOBChangeHandler.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
   }
 
   resetErrorLabels() {
@@ -158,7 +160,7 @@ export default class StudentForm extends React.Component {
 
     if(haveErrors) return
 
-    const payload = {
+    /*const payload = {
       branchId: 2,
       firstName: this.state.firstName,
       middleName: this.state.middleName,
@@ -168,7 +170,19 @@ export default class StudentForm extends React.Component {
       contactNo: this.state.contactNo,
       dob: this.state.dob,
       email: this.state.email,
-    }
+    }*/
+
+
+    const payload = new FormData();
+    payload.append('profileImage',this.state.profileImage)
+    payload.append('firstName',this.state.firstName)
+    payload.append('middleName',this.state.middleName)
+    payload.append('lastName',this.state.lastName)
+    payload.append('address',this.state.address)
+    payload.append('gender',this.state.gender)
+    payload.append('contactNo',this.state.contactNo)
+    payload.append('dob',this.state.dob)
+    payload.append('email',this.state.email)
 
     let response = null
     if (this.props.isNewRecord) {
@@ -188,13 +202,22 @@ export default class StudentForm extends React.Component {
 
   }
 
+  handleImageUpload = (event) => {
+    const file = event.file;
+    if (file) {
+      this.setState({
+        profileImage:file
+      })
+    }
+  }
+
   render() {
     return (
         <form>
           <div className='row'>
             <div className='col-md-4'>
               <Form.Item label="Profile Image" name="profileImage">
-                <Upload.Dragger name="files" action="/upload.do">
+                <Upload.Dragger name="files" onChange={this.handleImageUpload}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined/>
                   </p>
@@ -287,13 +310,6 @@ export default class StudentForm extends React.Component {
               </Form.Item>
 
               <Form.Item>
-                {/*<input
-                    className="form-control ant-form-item-control-input"
-                    type="date"
-                    onChange={this.onInputFieldChangeHandler}
-                    name="dob"
-                    placeholder='DOB'
-                />*/}
                 <DatePicker  placeholder='DOB' className='w-100' onChange={this.onDOBChangeHandler} />
                 <label className="error-label">
                   {this.state.dobError}

@@ -5,7 +5,7 @@ class StudentService {
 
   //js axio lib use to call http req
   async saveStudent(student) {
-    return await axios.post(`${API.students}`, student)
+    return await axios.post(`${API.students}`,  student)
   }
 
   async updateStudent(id, student) {
