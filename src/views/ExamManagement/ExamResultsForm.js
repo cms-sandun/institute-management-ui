@@ -14,17 +14,22 @@ export default class ExamResultsForm extends React.Component {
         this.state = {
             data: [],
             exam_id: this.props.exam.id,
-            enrolledStudentList:[]
+            enrolledStudentList: [],
+            selectedStudent: '',
+            selectedGrade: ''
         };
 
         this.loadResultsTable = this.loadResultsTable.bind(this);
+        this.onGradeChangeHandler = this.onGradeChangeHandler.bind(this);
+        this.onStudentChangeHandler = this.onStudentChangeHandler.bind(this);
+        this.onSubmitHandler = this.onSubmitHandler.bind(this);
     }
 
     columns = [
         {
             title: "Student Name",
-            render : (text, record)=>{
-              return `${record.student.first_name} ${record.student.last_name}`
+            render: (text, record) => {
+                return `${record.student.first_name} ${record.student.last_name}`
             },
             key: "result",
         },
@@ -51,7 +56,7 @@ export default class ExamResultsForm extends React.Component {
         examService.getEnrolledStudentsList(this.state.exam_id).then(response => {
             console.log(response.data)
             this.setState({
-                enrolledStudentList : response.data.data
+                enrolledStudentList: response.data.data
             })
         })
     }
@@ -88,6 +93,39 @@ export default class ExamResultsForm extends React.Component {
         )
     }
 
+    openNotificationWithIcon(type, title, msg) {
+        notification[type]({
+            message: title,
+            description: msg,
+        });
+    }
+
+    onSubmitHandler() {
+        const payload = {
+            exam_id : this.state.exam_id,
+            student_id : this.state.selectedStudent,
+            result : this.state.selectedGrade
+        }
+
+        examService.addResults(payload).then(response => {
+            if(response.data.success){
+                this.openNotificationWithIcon("success", "Results", response.data.msg);
+            }
+        })
+    }
+
+    onStudentChangeHandler(value) {
+        this.setState({
+            selectedStudent: value
+        })
+    }
+
+    onGradeChangeHandler(value) {
+        this.setState({
+            selectedGrade: value
+        })
+    }
+
 
     render() {
         return (
@@ -97,7 +135,7 @@ export default class ExamResultsForm extends React.Component {
                         <Form.Item>
                             <Select
                                 placeholder="Select Student"
-                                name="student" onChange={this.onEmployeeChangeHandler}
+                                name="student" onChange={this.onStudentChangeHandler}
 
                             >
                                 {this.getEnrolledStudentsList()}
@@ -111,7 +149,7 @@ export default class ExamResultsForm extends React.Component {
                         <Form.Item>
                             <Select
                                 placeholder="Select Grade"
-                                name="student" onChange={this.onEmployeeChangeHandler}
+                                name="student" onChange={this.onGradeChangeHandler}
 
                             >
                                 {this.getGradesList()}
@@ -127,9 +165,7 @@ export default class ExamResultsForm extends React.Component {
                                 style={{float: "right", marginBottom: "10px", zIndex: '1'}}
                                 type="primary"
                                 className="success-btn"
-                                onClick={()=>{
-                                    this.showAddNewExamModal(true, null)
-                                }}
+                                onClick={this.onSubmitHandler}
                             >
                                 Add
                             </Button>
