@@ -54,6 +54,7 @@ export default class StudentManagement extends React.Component {
             title: "Full Name",
             render: (text,record) => {
                 console.log(record)
+                console.log("text",text)
                 return record.first_name +" " +record.last_name
             },
             key: "fullName",
