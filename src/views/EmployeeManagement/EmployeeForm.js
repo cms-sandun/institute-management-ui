@@ -169,7 +169,6 @@ export default class EmployeeForm extends React.Component {
 
     //way of sending as form data, unless images cannot upload
     const payload = new FormData();
-    payload.append('branchId',1)
     payload.append('profile_image',this.state.profileImage)
     payload.append('firstName',this.state.firstName)
     payload.append('middleName',this.state.middleName)
