@@ -79,7 +79,10 @@ export default class Dashboard extends React.Component {
           onCollapse={this.onCollapse}
         >
           <div className="logo" />
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+            <Menu.Item key="0" icon={<UsergroupAddOutlined />}>
+              <Link to='/'>Home</Link>
+            </Menu.Item>
             <Menu.Item key="1" icon={<UsergroupAddOutlined />}>
               <Link to='/users'>Users</Link>
             </Menu.Item>
@@ -94,9 +97,6 @@ export default class Dashboard extends React.Component {
             </Menu.Item>
             <Menu.Item key="5" icon={<GroupOutlined />}>
               <Link to="/batches">Batches</Link>
-            </Menu.Item>
-            <Menu.Item key="6" icon={<BranchesOutlined />}>
-            <Link to='/'>Branches</Link>
             </Menu.Item>
             <Menu.Item key="7" icon={<BookOutlined />}>
             <Link to='/classes'>Classes</Link>
@@ -144,7 +144,9 @@ export default class Dashboard extends React.Component {
               className="site-layout-background"
               style={{ padding: 24, minHeight: '100%' }}
             >
-              <Route path="/" exact render={()=><h1>This is Home</h1>} />
+              <Route path="/" exact render={(props) => (
+                  <EventsCalendar {...props} setBreadCrumb={this.setBreadCrumb}/>
+              )}/>
               <Route path="/students" exact render={(props) => (
                   <StudentManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
               )}/>
