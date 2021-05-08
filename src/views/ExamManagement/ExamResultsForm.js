@@ -110,6 +110,7 @@ export default class ExamResultsForm extends React.Component {
         examService.addResults(payload).then(response => {
             if(response.data.success){
                 this.openNotificationWithIcon("success", "Results", response.data.msg);
+                this.loadResultsTable(this.state.exam_id)
             }
         })
     }
