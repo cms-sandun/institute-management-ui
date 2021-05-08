@@ -4,20 +4,21 @@ import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import paymentService from "../../services/paymentService";
 import moment from "moment";
+import studentService from "../../services/studentService";
 
 const {Option} = Select;
 
 export default class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
         this.state = {
             paymentID: props.payment ? props.payment.id : '',
-            studentName: props.payment ? props.payment.first_name : '',
+            studentId: props.payment ? props.payment.student_id : '',
             paidAmount: props.payment ? props.payment.paid_amount : '',
             remainingAmount: props.payment ? props.payment.remaining_amount : '',
             date: props.payment ? props.payment.date : '',
             paymentMethod: props.payment ? props.payment.payment_method : 'Direct Payment',
+            studentList:[],
 
             studentNameError: "",
             paidAmountError: "",
@@ -34,6 +35,7 @@ export default class PaymentForm extends React.Component {
         this.onInputFieldChangeHandler = this.onInputFieldChangeHandler.bind(this);
         this.onPaymentMethodChangeHandler = this.onPaymentMethodChangeHandler.bind(this);
         this.onPaymentDateChangeHandler = this.onPaymentDateChangeHandler.bind(this);
+        this.onStudentChangeHandler = this.onStudentChangeHandler.bind(this);
     }
 
     resetErrorLabels() {
@@ -48,11 +50,11 @@ export default class PaymentForm extends React.Component {
 
     resetFields() {
         this.setState({
-            studentName: "",
+            studentId: "",
             paidAmount: "",
             remainingAmount: "",
             date: "",
-            paymentMethod: "Direct Payment",
+            paymentMethod: "direct",
         });
     }
 
@@ -78,12 +80,32 @@ export default class PaymentForm extends React.Component {
             date: moment
         })
     }
+    loadStudents(){
+        studentService.getAllStudents().then(
+            response => {
+                this.setState({
+                    studentList: response.data.data
+                })
+            }
+        )
+    }
+
+    onStudentChangeHandler(value) {
+        this.setState({
+            studentId: value,
+        });
+    }
 
     setValidationError(errorField, errorMsg) {
         this.setState({
             [errorField]: errorMsg
         });
     }
+
+    componentDidMount() {
+        this.loadStudents()
+    }
+
 
     async onSubmitHandler(event) {
         this.resetErrorLabels();
@@ -92,7 +114,7 @@ export default class PaymentForm extends React.Component {
         if(haveErrors) return
 
         const payload = {
-            studentID: 40,
+            studentId: this.state.studentId,
             // studentName: this.state.studentName,
             paidAmount: this.state.paidAmount,
             remainingAmount: this.state.remainingAmount,
@@ -118,18 +140,34 @@ export default class PaymentForm extends React.Component {
 
     }
 
+    studentArray = () => {
+        return (
+            <>
+                {this.state.studentList.length >0 && this.state.studentList.map(stu => {
+                    console.log(this.state.studentList)
+                    return (
+                        <Option key={stu.id} value={stu.id}>{stu.first_name}</Option>
+
+                    )
+                })}
+            </>
+        )
+    }
+
     render() {
         return (
             <form>
                 <div className='row'>
                     <div className='col-md-12'>
+
                         <Form.Item>
-                            <Input
-                                onChange={this.onInputFieldChangeHandler}
-                                name="studentName"
-                                value={this.state.studentName}
-                                placeholder='Student Name'
-                            />
+                            <Select
+                                placeholder="Select Student"
+                                name="studentName" onChange={this.onStudentChangeHandler}
+
+                            >
+                                {this.studentArray()}
+                            </Select>
                             <label className="error-label">
                                 {this.state.studentNameError}
                             </label>
