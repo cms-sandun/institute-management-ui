@@ -93,7 +93,7 @@ export default class Login extends React.Component {
             <form>
                 <div className='row'>
                     <div className='col '>
-                        <div className='login-control-wrapper mx-auto align-middle'
+                        <div className='login-control-wrapper mx-auto align-middle mt-5'
                              style={{
                                  marginTop: '5px',
                                  width: '40%',

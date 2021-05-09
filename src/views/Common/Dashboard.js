@@ -26,6 +26,8 @@ import StuAttendanceManagement from "../StuAttendanceManagement/StuAttendanceMan
 import ClassManagement from "../ClassManagement/ClassManagement";
 import ExamEnrollSuccessPage from "../ExamEnrollementSuccessPage/ExamEnrollSuccessPage";
 import PaymentManagement from "../PaymentManagement/PaymentManagement";
+import ReportsManagement from "../ReportsManagement/ReportsManagement";
+import authService from "../../services/authService";
 
 const {Header, Content, Footer, Sider} = Layout;
 const {SubMenu} = Menu;
@@ -83,6 +85,11 @@ export default class Dashboard extends React.Component {
     };
 
     componentDidMount() {
+        if(!authService.isLogged()){
+            window.location.replace("/login")
+            return
+        }
+
         let userJson = localStorage.getItem('user')
         const userObj = JSON.parse(userJson)
         const userName = userObj.username
@@ -155,10 +162,9 @@ export default class Dashboard extends React.Component {
                         <Menu.Item disabled={this.hasPermissions('attendance')} key="11" icon={<BarChartOutlined/>}>
                             <Link to='/attendance'>Stu. Attendance</Link>
                         </Menu.Item>
-                        <SubMenu key="12" icon={<AreaChartOutlined/>} title="Reports">
-                            {/*<Menu.Item key="13"> <Link to='/'>Students</Link></Menu.Item>
-              <Menu.Item key="14"> <Link to='/'>Income</Link></Menu.Item>*/}
-                        </SubMenu>
+                        <Menu.Item disabled={this.hasPermissions('reports')} key="12" icon={<BarChartOutlined/>}>
+                            <Link to='/reports'>Reports</Link>
+                        </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">
@@ -225,6 +231,9 @@ export default class Dashboard extends React.Component {
                             )}/>
                             <Route path="/payments" exact render={(props) => (
                                 <PaymentManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
+                            )}/>
+                            <Route path="/reports" exact render={(props) => (
+                                <ReportsManagement {...props} setBreadCrumb={this.setBreadCrumb}/>
                             )}/>
                         </div>
                     </Content>

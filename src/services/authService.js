@@ -7,7 +7,7 @@ class AuthService {
     return await axios.post(`${API.users}/login`, payload)
   }
 
-  async isLogged() {
+  isLogged() {
     return localStorage.getItem('user') != null
   }
 
