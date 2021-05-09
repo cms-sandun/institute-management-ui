@@ -4,7 +4,6 @@ import {InboxOutlined} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import studentService from "../../services/studentService";
 import moment from "moment";
-
 const {Option} = Select;
 
 export default class StudentForm extends React.Component {
@@ -234,6 +233,7 @@ export default class StudentForm extends React.Component {
                     name="firstName"
                     value={this.state.firstName}
                     placeholder='First Name'
+                    rules={[{ required: true, message: 'Missing sight' }]}
                 />
                 <label className="error-label">
                   {this.state.firstNameError}

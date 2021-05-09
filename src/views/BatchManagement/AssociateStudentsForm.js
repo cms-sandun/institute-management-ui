@@ -49,6 +49,7 @@ export default class AssociateStudentsForm extends React.Component {
             this.setState({
                 associatedStudentList: response.data.data
             })
+            console.log(this.state.associatedStudentList)
         })
     }
 

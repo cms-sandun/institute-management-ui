@@ -2,7 +2,8 @@ import React from "react";
 import StudentForm from "./StudentForm";
 import {Table, Space, Button, Modal, Popconfirm, Input, notification} from "antd";
 import studentService from "../../services/studentService";
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UserOutlined} from '@ant-design/icons';
+import examService from "../../services/examService";
 
 const {confirm} = Modal;
 const {Search} = Input;
@@ -50,15 +51,7 @@ export default class StudentManagement extends React.Component {
             dataIndex: "last_name",
             key: "lastName",
         },
-        {
-            title: "Full Name",
-            render: (text,record) => {
-                console.log(record)
-                console.log("text",text)
-                return record.first_name +" " +record.last_name
-            },
-            key: "fullName",
-        },
+
         {
             title: "Contact No",
             dataIndex: "contact_no",
