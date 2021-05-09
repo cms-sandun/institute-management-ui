@@ -256,18 +256,6 @@ export default class EmployeeForm extends React.Component {
               </Form.Item>
 
               <Form.Item>
-                <Input
-                    name="employeeNumber"
-                    value={this.state.employee_no}
-                    placeholder='Employee Number'
-                    disabled={true}
-                />
-                <label className="error-label">
-                  {this.state.lastNameError}
-                </label>
-              </Form.Item>
-
-              <Form.Item>
                 <TextArea
                     onChange={this.onInputFieldChangeHandler}
                     name="address"
