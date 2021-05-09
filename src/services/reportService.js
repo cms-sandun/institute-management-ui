@@ -3,8 +3,8 @@ import { API } from '../config';
 
 class BatchService {
 
-  async saveBatch(batch) {
-    return await axios.get(`${API.batches}`, batch)
+  async getResultSummaryReport(exam_id) {
+    return await axios.get(`${API.reports}/result_summary?exam_id=${exam_id}`)
   }
 
 }

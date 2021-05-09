@@ -3,6 +3,7 @@ import {Form, Input, Upload, Select, Button, notification, DatePicker, Card} fro
 import {Calendar, momentLocalizer} from "react-big-calendar";
 import moment from "moment";
 import examService from "../../services/examService";
+import reportService from "../../services/reportService";
 
 const {Option} = Select;
 const localizer = momentLocalizer(moment);
@@ -12,19 +13,20 @@ export default class ReportsManagement extends React.Component {
     super(props);
     this.state = {
       examsList: [],
-      selectedExam: ''
+      report1SelectedExam: ''
     }
 
     this.getExamList = this.getExamList.bind(this);
     this.loadExams = this.loadExams.bind(this);
     this.onExamChangeHandler = this.onExamChangeHandler.bind(this);
+    this.generateResultsSummaryReport = this.generateResultsSummaryReport.bind(this);
   }
 
   getExamList() {
     examService.getAllExames().then(response => {
       if (response.data.success) {
         this.setState({
-          examsList : response.data.data
+          examsList: response.data.data
         })
       }
     })
@@ -42,9 +44,9 @@ export default class ReportsManagement extends React.Component {
     )
   }
 
-  onExamChangeHandler(value){
+  onExamChangeHandler(value) {
     this.setState({
-      selectedExam : value
+      report1SelectedExam: value
     })
   }
 
@@ -53,8 +55,24 @@ export default class ReportsManagement extends React.Component {
     this.getExamList()
   }
 
-  generateResultsSummaryReport(){
+  openNotificationWithIcon(type, title, msg) {
+    notification[type]({
+      message: title,
+      description: msg,
+    });
+  }
 
+  generateResultsSummaryReport() {
+    if(!this.state.report1SelectedExam) {
+      this.openNotificationWithIcon("error", "Report", "Please select exam");
+      return
+    }
+
+    reportService.getResultSummaryReport(this.state.report1SelectedExam).then(response => {
+      if (response.data.success) {
+        window.open("http://localhost:5000/" + response.data.data, 'blank')
+      }
+    })
   }
 
   render() {
@@ -75,20 +93,17 @@ export default class ReportsManagement extends React.Component {
                 <Button
                     className="form-button submit-button"
                     type="primary"
+                    onClick={this.generateResultsSummaryReport}
                 >
                   Generate Report
                 </Button>
               </Card>
             </div>
             <div className="col">
-              <Card title="Card title">
-                Card content
-              </Card>
+
             </div>
             <div className="col">
-              <Card title="Card title">
-                Card content
-              </Card>
+
             </div>
           </div>
         </div>

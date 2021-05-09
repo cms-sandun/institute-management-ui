@@ -71,13 +71,11 @@ export default class Login extends React.Component {
 
         const payload = {
             user_name: this.state.userName,
-            pwd: this.state.pwd,
-            userNameError: '',
-            pwdError: ''
+            pwd: this.state.pwd
         }
 
         authService.login(payload).then(response => {
-            if (response.data.data) {
+            if (response.data.success) {
                 localStorage.setItem('user', JSON.stringify(response.data.data))
                 window.location.replace("/")
             } else {

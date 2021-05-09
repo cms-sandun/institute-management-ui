@@ -60,16 +60,9 @@ export default class StuAttendanceManagement extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button className='mr-2' icon={<EditOutlined/>} onClick={(e) => {
-                        this.showModal(false, record)
-                    }}>
-                    </Button>
-
-
                     <Button icon={<DeleteOutlined/>} onClick={(e) => {
                         this.showDeleteConfirmation(record.id)
                     }}>
-
                     </Button>
                 </div>
             ),

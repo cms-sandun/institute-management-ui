@@ -12,12 +12,12 @@ export default class UserForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userID:'',
+            userID: props.user ? props.user.id : '',
             employee: '',
-            userName: props.student ? props.student.first_name : '',
-            password: props.student ? props.student.last_name : '',
-            role: props.student ? props.student.middle_name : '',
-            employeeList:[],
+            userName: props.user ? props.user.username : '',
+            password: props.user ? props.user.password : '',
+            role: props.user ? props.user.user_type : '',
+            employeeList: [],
             employeeError: "",
             userNameError: "",
             passwordError: "",
@@ -41,7 +41,7 @@ export default class UserForm extends React.Component {
         });
     }
 
-    loadEmployees(){
+    loadEmployees() {
         employeeService.getAllEmployees().then(
             response => {
                 this.setState({
@@ -151,10 +151,10 @@ export default class UserForm extends React.Component {
 
     }
 
-     employeeArray = () => {
+    employeeArray = () => {
         return (
             <>
-                {this.state.employeeList.length >0 && this.state.employeeList.map(emp => {
+                {this.state.employeeList.length > 0 && this.state.employeeList.map(emp => {
                     return (
                         <Option key={emp.id} value={emp.id}>{emp.first_name}</Option>
                     )
@@ -188,6 +188,7 @@ export default class UserForm extends React.Component {
                                 name="userName"
                                 value={this.state.userName}
                                 placeholder='User Name'
+                                //disabled={this.props.user ? true : false}
                             />
                             <label className="error-label">
                                 {this.state.userNameError}
