@@ -126,6 +126,7 @@ export default class UserForm extends React.Component {
         if (haveErrors) return
 
         const payload = {
+            employee_id: this.state.employee,
             name: this.state.userName,
             password: this.state.password,
             user_type: this.state.role,
@@ -213,9 +214,9 @@ export default class UserForm extends React.Component {
                                 placeholder="Select Role"
                             >
                                 <Option value="admin">Admin</Option>
-                                <Option value="parent">Parent</Option>
                                 <Option value="teacher">Teacher</Option>
                                 <Option value="student">Student</Option>
+                                <Option value="receptionist">Receptionist</Option>
                             </Select>
                             <label className="error-label">
                                 {this.state.roleError}
