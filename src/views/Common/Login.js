@@ -96,7 +96,7 @@ export default class Login extends React.Component {
                         <div className='login-control-wrapper mx-auto align-middle mt-5'
                              style={{
                                  marginTop: '5px',
-                                 width: '40%',
+                                 width: '25%',
                                  padding: '65px',
                                  boxShadow: '0px 0px 10px 1px #001628',
                                  backgroundColor: '#299398'
