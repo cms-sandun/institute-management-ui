@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Menu, Breadcrumb, Badge, Avatar, Drawer} from "antd";
+import {Layout, Menu, Breadcrumb, Badge, Avatar, Drawer, Dropdown} from "antd";
 import {Route, Link} from "react-router-dom";
 import {
     NotificationOutlined,
@@ -41,10 +41,21 @@ export default class Dashboard extends React.Component {
             isDrawerVisible: false,
             breadcrumbMainPath: '',
             breadcrumbSubPath: '',
-            userName: ''
+            userName: '',
+            userObj:''
         };
 
-        //this.setBreadCrumb = this.setBreadCrumb.bind(this);
+        this.hasPermissions = this.hasPermissions.bind(this);
+    }
+
+    getMenu(){
+        return(
+            <Menu>
+                <Menu.Item key="0">
+                    <a href="/login">Logout</a>
+                </Menu.Item>
+            </Menu>
+        )
     }
 
     showDrawer = () => {
@@ -72,14 +83,33 @@ export default class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        let userObj = localStorage.getItem('user')
-        const userJson = JSON.parse(userObj)
-        const userName = userJson.username
+        let userJson = localStorage.getItem('user')
+        const userObj = JSON.parse(userJson)
+        const userName = userObj.username
+
 
         this.setState({
+            userObj : userObj,
             userName: userName
         })
 
+    }
+
+    permissionMap = {
+        admin : ['users','reports','employees'],
+        teacher : ['exams','attendance'],
+        student : ['users','reports'],
+        receptionist : ['students','courses','batches','classes']
+    }
+
+    hasPermissions(screen) {
+        let user_role = this.state.userObj.user_type
+
+        if(user_role != undefined){
+            let permissionArr = this.permissionMap[user_role]
+            console.log(permissionArr)
+            return !permissionArr.includes(screen)
+       }
     }
 
     render() {
@@ -95,34 +125,34 @@ export default class Dashboard extends React.Component {
                         <Menu.Item key="0" icon={<UsergroupAddOutlined/>}>
                             <Link to='/'>Home</Link>
                         </Menu.Item>
-                        <Menu.Item key="1" icon={<UsergroupAddOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('users')} key="1" icon={<UsergroupAddOutlined/>}>
                             <Link to='/users'>Users</Link>
                         </Menu.Item>
-                        <Menu.Item key="2" icon={<UsergroupAddOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('employees')} key="2" icon={<UsergroupAddOutlined/>}>
                             <Link to='/employees'>Employees</Link>
                         </Menu.Item>
-                        <Menu.Item key="3" icon={<UsergroupAddOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('students')} key="3" icon={<UsergroupAddOutlined/>}>
                             <Link to="/students">Students</Link>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<BookOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('courses')} key="4" icon={<BookOutlined/>}>
                             <Link to='/courses'>Courses</Link>
                         </Menu.Item>
-                        <Menu.Item key="5" icon={<GroupOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('batches')} key="5" icon={<GroupOutlined/>}>
                             <Link to="/batches">Batches</Link>
                         </Menu.Item>
-                        <Menu.Item key="7" icon={<BookOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('classes')} key="7" icon={<BookOutlined/>}>
                             <Link to='/classes'>Classes</Link>
                         </Menu.Item>
-                        <Menu.Item key="8" icon={<PaperClipOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('exams')} key="8" icon={<PaperClipOutlined/>}>
                             <Link to="/exams">Exams</Link>
                         </Menu.Item>
-                        <Menu.Item key="9" icon={<CalendarOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('calendar')} key="9" icon={<CalendarOutlined/>}>
                             <Link to='/calendar'>Calendar</Link>
                         </Menu.Item>
-                        <Menu.Item key="10" icon={<DollarCircleOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('payments')} key="10" icon={<DollarCircleOutlined/>}>
                             <Link to='/payments'>Payments</Link>
                         </Menu.Item>
-                        <Menu.Item key="11" icon={<BarChartOutlined/>}>
+                        <Menu.Item disabled={this.hasPermissions('attendance')} key="11" icon={<BarChartOutlined/>}>
                             <Link to='/attendance'>Stu. Attendance</Link>
                         </Menu.Item>
                         <SubMenu key="12" icon={<AreaChartOutlined/>} title="Reports">
@@ -144,7 +174,11 @@ export default class Dashboard extends React.Component {
                                 <NotificationOutlined/>
                             </Badge>
                             <Avatar style={{marginLeft: "20px"}} icon={<UserOutlined/>}/>
-                            <label className='ml-2'>{this.state.userName}</label>
+                            <Dropdown className='ml-2' overlay={this.getMenu()} trigger={['click']}>
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    {this.state.userName}
+                                </a>
+                            </Dropdown>
                         </div>
                     </Header>
                     <Content style={{margin: "0 16px"}}>
