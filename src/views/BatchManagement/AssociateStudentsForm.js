@@ -19,6 +19,7 @@ export default class AssociateStudentsForm extends React.Component {
 
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
         this.onStudentSelectHandler = this.onStudentSelectHandler.bind(this);
+        this.onDeleteAssociateStudentHandler = this.onDeleteAssociateStudentHandler.bind(this);
     }
 
     columns = [
@@ -34,7 +35,9 @@ export default class AssociateStudentsForm extends React.Component {
             key: "action",
             render: (text, record) => (
                 <div>
-                    <Button title="Delete" className='mr-2' icon={<DeleteOutlined/>}>
+                    <Button title="Delete" className='mr-2' icon={<DeleteOutlined/>} onClick={()=>{
+                        this.onDeleteAssociateStudentHandler(record.id)
+                    }}>
                     </Button>
                 </div>
             ),
@@ -63,6 +66,15 @@ export default class AssociateStudentsForm extends React.Component {
             message: title,
             description: msg,
         });
+    }
+
+    onDeleteAssociateStudentHandler(id){
+        batchService.deleteAssociateStudent(id).then(response=>{
+            if(response.data.success){
+                this.getAssociatedStudentsList()
+                this.openNotificationWithIcon("success", "Associated Student", response.data.msg);
+            }
+        })
     }
 
     getStudents() {
