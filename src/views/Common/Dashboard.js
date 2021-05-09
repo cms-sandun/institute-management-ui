@@ -103,10 +103,10 @@ export default class Dashboard extends React.Component {
     }
 
     permissionMap = {
-        admin : ['users','reports','employees'],
+        admin : ['users','reports','employees','students','courses','batches','classes','exams','calendar','payments','attendance'],
         teacher : ['exams','attendance'],
         student : ['users','reports'],
-        receptionist : ['students','courses','batches','classes']
+        receptionist : ['students','courses','batches','classes','payments']
     }
 
     hasPermissions(screen) {
